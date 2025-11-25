@@ -1,0 +1,113 @@
+// src/pages/admin/ProductFormModal.jsx
+import React, { useState, useEffect } from 'react';
+import { Modal, Box, Typography, TextField, Button, Stack, FormControl, InputLabel, Select, MenuItem, IconButton, List, ListItem, ListItemText, Divider } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { apiService } from '../../services/apiService';
+import { mockSuppliesResponse, mockAdminProductDetail } from '../../mockData';
+
+const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, bgcolor: 'background.paper', boxShadow: 24, p: 4, maxHeight: '90vh', overflowY: 'auto' };
+
+const ProductFormModal = ({ open, onClose, product, onSave }) => {
+    const [formData, setFormData] = useState({});
+    const [availableSupplies, setAvailableSupplies] = useState([]);
+    const [selectedSupply, setSelectedSupply] = useState('');
+    const [supplyQuantity, setSupplyQuantity] = useState(1);
+    
+    useEffect(() => {
+        // Cargar insumos disponibles para el selector
+        const fetchSupplies = async () => {
+            try {
+                const data = await apiService.getSupplies();
+                setAvailableSupplies(data.content);
+            } catch (error) {
+                console.warn("API Get Supplies for modal failed, using mock data.", error);
+                setAvailableSupplies(mockSuppliesResponse.content);
+            }
+        };
+
+        // Cargar datos detallados del producto si estamos editando
+        const fetchProductDetails = async (productId) => {
+            try {
+                // const data = await apiService.getAdminProductById(productId);
+                // setFormData(data);
+                
+                // Simulación
+                console.log("Simulando GET /app-api/products/admin/" + productId);
+                setFormData(mockAdminProductDetail);
+            } catch (error) {
+                console.warn("API Get Admin Product failed, using mock data.", error);
+                setFormData(mockAdminProductDetail);
+            }
+        };
+
+        if (open) {
+            fetchSupplies();
+            if (product) {
+                fetchProductDetails(product.id);
+            } else {
+                setFormData({ name: '', description: '', price: '', imageUrl: '', materials: [] });
+            }
+        }
+    }, [product, open]);
+
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const handleAddMaterial = () => {
+        if (!selectedSupply || supplyQuantity <= 0) return;
+        const newMaterial = { supplyId: selectedSupply, quantityPerUnit: parseInt(supplyQuantity, 10) };
+        // Evitar duplicados
+        if (formData.materials.some(m => m.supplyId === newMaterial.supplyId)) return;
+        
+        setFormData({ ...formData, materials: [...formData.materials, newMaterial] });
+        setSelectedSupply('');
+        setSupplyQuantity(1);
+    };
+
+    const handleRemoveMaterial = (supplyId) => {
+        setFormData({ ...formData, materials: formData.materials.filter(m => m.supplyId !== supplyId) });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave({ ...formData, price: parseFloat(formData.price) });
+    };
+
+    const getSupplyName = (supplyId) => availableSupplies.find(s => s.id === supplyId)?.name || 'Desconocido';
+
+    return (
+        <Modal open={open} onClose={onClose}>
+            <Box sx={style} component="form" onSubmit={handleSubmit}>
+                <Typography variant="h6">{product ? 'Editar Producto' : 'Crear Producto'}</Typography>
+                <TextField name="name" label="Nombre" value={formData.name || ''} onChange={handleChange} fullWidth margin="normal" required />
+                {/* ... otros textfields para description, price, imageUrl ... */}
+                
+                <Divider sx={{ my: 2 }}>Materiales Requeridos</Divider>
+                <Stack direction="row" spacing={1} alignItems="center">
+                    <FormControl fullWidth>
+                        <InputLabel>Insumo</InputLabel>
+                        <Select value={selectedSupply} onChange={(e) => setSelectedSupply(e.target.value)} label="Insumo">
+                            {availableSupplies.map(s => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>)}
+                        </Select>
+                    </FormControl>
+                    <TextField label="Cantidad" type="number" value={supplyQuantity} onChange={(e) => setSupplyQuantity(e.target.value)} sx={{ width: '100px' }} />
+                    <IconButton color="primary" onClick={handleAddMaterial}><AddCircleIcon /></IconButton>
+                </Stack>
+                <List dense>
+                    {formData.materials?.map(material => (
+                        <ListItem key={material.supplyId} secondaryAction={<IconButton edge="end" onClick={() => handleRemoveMaterial(material.supplyId)}><DeleteIcon /></IconButton>}>
+                            <ListItemText primary={getSupplyName(material.supplyId)} secondary={`Cantidad: ${material.quantityPerUnit}`} />
+                        </ListItem>
+                    ))}
+                </List>
+                
+                <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                    <Button type="submit" variant="contained">Guardar</Button>
+                    <Button onClick={onClose}>Cancelar</Button>
+                </Stack>
+            </Box>
+        </Modal>
+    );
+};
+
+export default ProductFormModal;
