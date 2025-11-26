@@ -169,7 +169,7 @@ const HomePage = () => {
 
             {/* Características - Estilo Ánfora */}
             <Container maxWidth="lg" sx={{ mb: 6 }}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} justifyContent="center">
                     <Grid item xs={12} sm={6} md={3}>
                         <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
                             <ShippingIcon sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
@@ -297,7 +297,7 @@ const HomePage = () => {
                     </Box>
                 ) : (
                     <>
-                        <Grid container spacing={3} sx={{ mb: 6 }}>
+                        <Grid container spacing={3} sx={{ mb: 6 }} justifyContent="center">
                             {(searchTerm ? filteredMugs : mugs).map((mug) => (
                                 <Grid item key={mug.id} xs={12} sm={6} md={4} lg={3}>
                                     <MugCard product={mug} />
