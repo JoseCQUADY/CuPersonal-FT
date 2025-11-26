@@ -87,10 +87,11 @@ const Layout = ({ children }) => {
             {/* Top Bar - Información de contacto */}
             {!isAdminRoute && (
                 <Box sx={{ 
-                    bgcolor: 'primary.main', 
-                    color: 'white', 
+                    bgcolor: '#0f1a2e',
+                    color: '#E6EEF8', 
                     py: 1,
-                    display: { xs: 'none', md: 'block' }
+                    display: { xs: 'none', md: 'block' },
+                    borderBottom: '1px solid rgba(11,83,148,0.1)'
                 }}>
                     <Container maxWidth="lg">
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -122,7 +123,7 @@ const Layout = ({ children }) => {
             )}
 
             {/* Main Navigation */}
-            <AppBar position="static" elevation={0}>
+            <AppBar position="static" elevation={0} sx={{ borderBottom: '1px solid' }}>
                 <Container maxWidth="lg">
                     <Toolbar sx={{ py: 1 }}>
                         {/* Logo */}
@@ -134,17 +135,19 @@ const Layout = ({ children }) => {
                                 alignItems: 'center',
                                 textDecoration: 'none',
                                 color: 'inherit',
-                                mr: 4
+                                mr: 4,
+                                '&:hover': { opacity: 0.8 }
                             }}
                         >
-                            <StoreIcon sx={{ mr: 1.5, fontSize: 32, color: 'primary.main' }} />
+                            <StoreIcon sx={{ mr: 1.5, fontSize: 28, color: 'primary.main' }} />
                             <Box>
                                 <Typography 
                                     variant="h5" 
                                     sx={{ 
                                         fontWeight: 700,
                                         color: 'primary.main',
-                                        lineHeight: 1
+                                        lineHeight: 1,
+                                        fontSize: '1.3rem'
                                     }}
                                 >
                                     CuPersonal
@@ -153,12 +156,12 @@ const Layout = ({ children }) => {
                                     variant="caption" 
                                     sx={{ 
                                         color: 'text.secondary',
-                                        fontSize: '0.7rem',
+                                        fontSize: '0.65rem',
                                         textTransform: 'uppercase',
-                                        letterSpacing: 1
+                                        letterSpacing: 0.5
                                     }}
                                 >
-                                    Tazas & Más
+                                    Tazas Premium
                                 </Typography>
                             </Box>
                         </Box>
@@ -170,7 +173,7 @@ const Layout = ({ children }) => {
                                     color="inherit"
                                     component={RouterLink}
                                     to="/"
-                                    sx={{ mx: 1, fontWeight: 500 }}
+                                    sx={{ mx: 1, fontWeight: 600, fontSize: '0.95rem', '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' } }}
                                 >
                                     Inicio
                                 </Button>
@@ -179,7 +182,7 @@ const Layout = ({ children }) => {
                                     color="inherit"
                                     onClick={handleCategoriesClick}
                                     endIcon={<CategoryIcon />}
-                                    sx={{ mx: 1, fontWeight: 500 }}
+                                    sx={{ mx: 1, fontWeight: 600, fontSize: '0.95rem', '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' } }}
                                 >
                                     Categorías
                                 </Button>
@@ -205,7 +208,7 @@ const Layout = ({ children }) => {
                                     color="inherit"
                                     component={RouterLink}
                                     to="/about"
-                                    sx={{ mx: 1, fontWeight: 500 }}
+                                    sx={{ mx: 1, fontWeight: 600, fontSize: '0.95rem', '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' } }}
                                 >
                                     Nosotros
                                 </Button>
@@ -214,7 +217,7 @@ const Layout = ({ children }) => {
                                     color="inherit"
                                     component={RouterLink}
                                     to="/contact"
-                                    sx={{ mx: 1, fontWeight: 500 }}
+                                    sx={{ mx: 1, fontWeight: 600, fontSize: '0.95rem', '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' } }}
                                 >
                                     Contacto
                                 </Button>
@@ -231,9 +234,9 @@ const Layout = ({ children }) => {
                                 onClick={handleCartClick}
                                 sx={{ 
                                     mr: 2,
-                                    bgcolor: 'rgba(0,102,204,0.1)',
+                                    bgcolor: 'rgba(11,83,148,0.08)',
                                     '&:hover': {
-                                        bgcolor: 'rgba(0,102,204,0.2)',
+                                        bgcolor: 'rgba(11,83,148,0.15)',
                                     }
                                 }}
                             >
@@ -261,9 +264,9 @@ const Layout = ({ children }) => {
                             onClick={toggleTheme}
                             sx={{ 
                                 mr: 2,
-                                bgcolor: 'rgba(0,102,204,0.1)',
+                                bgcolor: 'rgba(11,83,148,0.08)',
                                 '&:hover': {
-                                    bgcolor: 'rgba(0,102,204,0.2)',
+                                    bgcolor: 'rgba(11,83,148,0.15)',
                                 }
                             }}
                         >
@@ -359,10 +362,11 @@ const Layout = ({ children }) => {
                 <Box 
                     component="footer" 
                     sx={{ 
-                        bgcolor: '#2C3E50',
-                        color: 'white',
+                        bgcolor: '#0f1a2e',
+                        color: '#E6EEF8',
                         py: 4,
-                        mt: 'auto'
+                        mt: 'auto',
+                        borderTop: '1px solid rgba(11,83,148,0.1)'
                     }}
                 >
                     <Container maxWidth="lg">

@@ -10,15 +10,17 @@ const ProductCard = ({ product }) => {
   return (
     <Card 
       sx={{ 
-        height: 420, // Altura fija para uniformidad
+        height: 420,
         display: 'flex', 
         flexDirection: 'column', 
-        transition: 'all 0.3s ease-in-out',
+        transition: 'transform 0.12s ease, box-shadow 0.12s ease',
         '&:hover': { 
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 25px rgba(0,102,204,0.15)'
+          transform: 'translateY(-2px)',
+          boxShadow: (theme) => theme.palette.mode === 'dark' 
+            ? '0 8px 20px rgba(2,6,23,0.6)' 
+            : '0 8px 20px rgba(15,23,42,0.08)'
         },
-        borderRadius: 3,
+        borderRadius: 2.5,
         overflow: 'hidden'
       }}
     >
@@ -29,14 +31,14 @@ const ProductCard = ({ product }) => {
       >
         <CardMedia
           component="img"
-          height="220" // Altura fija para las imágenes
+          height="220"
           image={product.imageUrl}
           alt={product.name}
           sx={{ 
             objectFit: 'cover',
-            transition: 'transform 0.3s ease-in-out',
+            transition: 'transform 0.2s ease',
             '&:hover': {
-              transform: 'scale(1.05)'
+              transform: 'scale(1.03)'
             }
           }}
         />
@@ -56,9 +58,9 @@ const ProductCard = ({ product }) => {
             sx={{ 
               fontWeight: 600,
               mb: 1,
-              fontSize: '1.1rem',
+              fontSize: '1rem',
               lineHeight: 1.3,
-              height: '2.6em', // Altura fija para 2 líneas
+              height: '2.6em',
               overflow: 'hidden',
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -73,9 +75,9 @@ const ProductCard = ({ product }) => {
             color="text.secondary"
             sx={{ 
               mb: 2,
-              fontSize: '0.875rem',
+              fontSize: '0.85rem',
               lineHeight: 1.4,
-              height: '2.8em', // Altura fija para 2 líneas
+              height: '2.8em',
               overflow: 'hidden',
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -91,7 +93,7 @@ const ProductCard = ({ product }) => {
           color="primary.main" 
           sx={{ 
             fontWeight: 700,
-            fontSize: '1.25rem'
+            fontSize: '1.2rem'
           }}
         >
           ${product.price.toFixed(2)}
@@ -104,10 +106,11 @@ const ProductCard = ({ product }) => {
           fullWidth
           onClick={() => addToCart(product)}
           sx={{
-            py: 1,
-            borderRadius: 2,
-            fontWeight: 500,
-            textTransform: 'none'
+            py: 0.8,
+            borderRadius: 1.5,
+            fontWeight: 600,
+            textTransform: 'none',
+            fontSize: '0.9rem'
           }}
         >
           Agregar al Carrito
