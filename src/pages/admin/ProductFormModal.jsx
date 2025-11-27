@@ -55,17 +55,17 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
 
     const handleAddMaterial = () => {
         if (!selectedSupply || supplyQuantity <= 0) return;
-        const newMaterial = { supplyId: selectedSupply, quantityPerUnit: parseInt(supplyQuantity, 10) };
+        const newMaterial = { id: selectedSupply, quantityPerUnit: parseInt(supplyQuantity, 10) };
         // Evitar duplicados
-        if (formData.materials.some(m => m.supplyId === newMaterial.supplyId)) return;
+        if (formData.materials.some(m => m.id === newMaterial.id)) return;
         
         setFormData({ ...formData, materials: [...formData.materials, newMaterial] });
         setSelectedSupply('');
         setSupplyQuantity(1);
     };
 
-    const handleRemoveMaterial = (supplyId) => {
-        setFormData({ ...formData, materials: formData.materials.filter(m => m.supplyId !== supplyId) });
+    const handleRemoveMaterial = (id) => {
+        setFormData({ ...formData, materials: formData.materials.filter(m => m.id !== id) });
     };
 
     const handleSubmit = (e) => {
@@ -73,14 +73,16 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         onSave({ ...formData, price: parseFloat(formData.price) });
     };
 
-    const getSupplyName = (supplyId) => availableSupplies.find(s => s.id === supplyId)?.name || 'Desconocido';
+    const getSupplyName = (id) => availableSupplies.find(s => s.id === id)?.name || 'Desconocido';
 
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={style} component="form" onSubmit={handleSubmit}>
                 <Typography variant="h6">{product ? 'Editar Producto' : 'Crear Producto'}</Typography>
                 <TextField name="name" label="Nombre" value={formData.name || ''} onChange={handleChange} fullWidth margin="normal" required />
-                {/* ... otros textfields para description, price, imageUrl ... */}
+                <TextField name="description" label="Descripción" value={formData.description || ''} onChange={handleChange} fullWidth margin="normal" required />
+                <TextField name="price" label="Precio" value={formData.price || ''} onChange={handleChange} fullWidth margin="normal" required />
+                <TextField name="imageUrl" label="URL de la Imagen" value={formData.imageUrl || ''} onChange={handleChange} fullWidth margin="normal" required />
                 
                 <Divider sx={{ my: 2 }}>Materiales Requeridos</Divider>
                 <Stack direction="row" spacing={1} alignItems="center">
@@ -96,8 +98,8 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                 </Stack>
                 <List dense>
                     {formData.materials?.map(material => (
-                        <ListItem key={material.supplyId} secondaryAction={<IconButton edge="end" onClick={() => handleRemoveMaterial(material.supplyId)}><DeleteIcon /></IconButton>}>
-                            <ListItemText primary={getSupplyName(material.supplyId)} secondary={`Cantidad: ${material.quantityPerUnit}`} />
+                        <ListItem key={material.id} secondaryAction={<IconButton edge="end" onClick={() => handleRemoveMaterial(material.id)}><DeleteIcon /></IconButton>}>
+                            <ListItemText primary={getSupplyName(material.id)} secondary={`Cantidad: ${material.quantityPerUnit}`} />
                         </ListItem>
                     ))}
                 </List>

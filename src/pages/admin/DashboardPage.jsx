@@ -37,8 +37,8 @@ const DashboardPage = () => {
                 apiService.getProducts(0, 50)
             ]);
 
-            setSupplies(suppliesData.content || []);
-            setProducts(productsData.content || []);
+            setSupplies(suppliesData || []);
+            setProducts(productsData || []);
         } catch (err) {
             console.error('Error fetching dashboard data:', err);
             setError('Error al cargar los datos del dashboard');

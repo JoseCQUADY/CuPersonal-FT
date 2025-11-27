@@ -40,7 +40,7 @@ const HomePage = () => {
         try {
             setLoading(true);
             const data = await apiService.getProducts(pageNum, 8);
-            setMugs(data.content);
+            setMugs(data);
             setTotalPages(data.totalPages);
             setTotalElements(data.totalElements);
             setPage(data.page);

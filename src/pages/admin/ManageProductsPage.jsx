@@ -29,7 +29,7 @@ const ManageProductsPage = () => {
         setLoading(true);
         try {
             const data = await apiService.getProducts();
-            setProducts(data.content);
+            setProducts(data);
         } catch (error) {
             console.warn("API Get Products failed, using mock data.", error);
             setProducts(mockProductsResponse.content);

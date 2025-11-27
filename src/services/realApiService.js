@@ -174,7 +174,7 @@ export const realApiService = {
                 description: productData.description,
                 price: productData.price,
                 imageUrl: productData.imageUrl,
-                materials: productData.materials || []
+                supplies: productData.materials || []
             });
             return response.data;
         } catch (error) {
