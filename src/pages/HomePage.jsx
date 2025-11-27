@@ -39,11 +39,11 @@ const HomePage = () => {
     const fetchMugs = async (pageNum = 0) => {
         try {
             setLoading(true);
-            const data = await apiService.getProducts(pageNum, 8);
+            const data = await apiService.getProducts(pageNum);
             setMugs(data.content);
             setTotalPages(data.totalPages);
             setTotalElements(data.totalElements);
-            setPage(data.page);
+            setPage(data.number);
         } catch (err) {
             console.error("Error fetching mugs:", err);
             setError("No se pudieron cargar los productos. Por favor, intenta de nuevo.");
@@ -65,9 +65,9 @@ const HomePage = () => {
         setSearchTerm(event.target.value);
     };
 
-    const filteredMugs = mugs.filter(mug =>
-        mug.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        mug.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredMugs = (mugs || []).filter(mug =>
+        (mug?.name ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (mug?.description ?? '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (loading && page === 0) {
@@ -169,7 +169,7 @@ const HomePage = () => {
 
             {/* Características - Estilo Ánfora */}
             <Container maxWidth="lg" sx={{ mb: 6 }}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} justifyContent="center">
                     <Grid item xs={12} sm={6} md={3}>
                         <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
                             <ShippingIcon sx={{ fontSize: 40, color: 'primary.main', mb: 2 }} />
@@ -297,20 +297,20 @@ const HomePage = () => {
                     </Box>
                 ) : (
                     <>
-                        <Grid container spacing={3} sx={{ mb: 6 }}>
-                            {(searchTerm ? filteredMugs : mugs).map((mug) => (
+                        <Grid container spacing={3} sx={{ mb: 6 }} justifyContent="center">
+                            {((searchTerm ? filteredMugs : mugs) || []).map((mug) => (
                                 <Grid item key={mug.id} xs={12} sm={6} md={4} lg={3}>
                                     <MugCard product={mug} />
                                 </Grid>
                             ))}
                         </Grid>
 
-                        {(searchTerm ? filteredMugs : mugs).length === 0 && (
+                        {((searchTerm ? filteredMugs : mugs) || []).length === 0 && (
                             <Paper 
                                 sx={{ 
                                     p: 8, 
                                     textAlign: 'center',
-                                    backgroundColor: 'grey.50'
+                                    backgroundColor: 'primary.main'
                                 }}
                             >
                                 <StoreIcon sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
@@ -347,7 +347,7 @@ const HomePage = () => {
                                     showLastButton
                                     sx={{
                                         '& .MuiPagination-ul': {
-                                            backgroundColor: 'white',
+                                            backgroundColor: 'primary.main',
                                             borderRadius: 2,
                                             p: 1,
                                             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
@@ -364,7 +364,7 @@ const HomePage = () => {
                     mt: 8, 
                     p: 6, 
                     textAlign: 'center',
-                    background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
+                    background: 'primary.main'
                 }}>
                     <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
                         ¿No encuentras lo que buscas?

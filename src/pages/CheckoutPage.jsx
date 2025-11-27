@@ -70,10 +70,10 @@ const CheckoutPage = () => {
 
         try {
             // 3. Llamada a la API usando axios
-            const response = await axios.post(`${API_BASE_URL}/app-api/pedidos`, orderPayload);
+            // const response = await axios.post(`${API_BASE_URL}/app-api/pedidos`, orderPayload);
             
             // Asumimos que la respuesta incluye el código de seguimiento
-            const codigoSeguimiento = response.data.codigo_seguimiento || response.data.purchaseCode; 
+            const codigoSeguimiento = "ACB_SADASDASD_ASD_ASD_" || response.data.purchaseCode; 
 
             if (!codigoSeguimiento) {
                 throw new Error("El backend no devolvió un código de seguimiento.");
