@@ -124,9 +124,9 @@ export const realApiService = {
      * GET /app-api/products
      * Get paginated list of products
      */
-    getProducts: async () => {// page y size por defecto en el Back
+    getProducts: async (page) => {// page y size por defecto en el Back
         try {
-            const response = await appApi.get('/products');
+            const response = await appApi.get('/products?page=' + page);
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -222,9 +222,9 @@ export const realApiService = {
      * GET /app-api/supplies/
      * Get paginated list of supplies
      */
-    getSupplies: async () => {// page y size por defecto en el Back
+    getSupplies: async (page) => {// page y size por defecto en el Back
         try {
-            const response = await appApi.get('/supplies');
+            const response = await appApi.get('/supplies?page=' + page);
             return response.data;
         } catch (error) {
             handleApiError(error);

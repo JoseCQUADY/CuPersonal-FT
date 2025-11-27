@@ -24,7 +24,9 @@ import {
 const DashboardPage = () => {
     const { user, logout } = useAuth();
     const [supplies, setSupplies] = useState([]);
+    const [suppliesContext, setAllSupplies] = useState([]);
     const [products, setProducts] = useState([]);
+    const [productsContext, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -37,8 +39,12 @@ const DashboardPage = () => {
                 apiService.getProducts(0, 50)
             ]);
 
-            setSupplies(suppliesData || []);
-            setProducts(productsData || []);
+            setSupplies(suppliesData.content || []);
+            setAllSupplies(suppliesData || []);
+            
+            setProducts(productsData.content || []);
+            setAllProducts(productsData || []);
+            
         } catch (err) {
             console.error('Error fetching dashboard data:', err);
             setError('Error al cargar los datos del dashboard');
@@ -52,8 +58,8 @@ const DashboardPage = () => {
     }, []);
 
     const lowStockSupplies = supplies.filter(supply => supply.quantity <= supply.minimumQuantity);
-    const totalProducts = products.length;
-    const totalSupplies = supplies.length;
+    const totalProducts = productsContext.totalElements;
+    const totalSupplies = suppliesContext.totalElements;
     const averagePrice = products.length > 0
         ? (products.reduce((sum, product) => sum + product.price, 0) / products.length).toFixed(2)
         : 0;
@@ -395,9 +401,9 @@ const DashboardPage = () => {
 
                         <Divider sx={{ my: 3 }} />
 
-                        <Grid container spacing={3}>
+                        <Grid container spacing={3} justifyContent="center">
                             <Grid item xs={12} md={4}>
-                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'grey.50' }}>
+                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'primary.main' }}>
                                     <Typography variant="h6" sx={{ mb: 1 }}>Ventas del Mes</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         Análisis de productos más vendidos
@@ -405,7 +411,7 @@ const DashboardPage = () => {
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'grey.50' }}>
+                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'primary.main' }}>
                                     <Typography variant="h6" sx={{ mb: 1 }}>Tendencias de Stock</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         Predicción de reabastecimiento
@@ -413,7 +419,7 @@ const DashboardPage = () => {
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'grey.50' }}>
+                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'primary.main' }}>
                                     <Typography variant="h6" sx={{ mb: 1 }}>Rentabilidad</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         Análisis de márgenes por producto

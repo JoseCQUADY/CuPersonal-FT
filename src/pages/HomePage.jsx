@@ -39,11 +39,11 @@ const HomePage = () => {
     const fetchMugs = async (pageNum = 0) => {
         try {
             setLoading(true);
-            const data = await apiService.getProducts(pageNum, 8);
-            setMugs(data);
+            const data = await apiService.getProducts(pageNum);
+            setMugs(data.content);
             setTotalPages(data.totalPages);
             setTotalElements(data.totalElements);
-            setPage(data.page);
+            setPage(data.number);
         } catch (err) {
             console.error("Error fetching mugs:", err);
             setError("No se pudieron cargar los productos. Por favor, intenta de nuevo.");
@@ -310,7 +310,7 @@ const HomePage = () => {
                                 sx={{ 
                                     p: 8, 
                                     textAlign: 'center',
-                                    backgroundColor: 'grey.50'
+                                    backgroundColor: 'primary.main'
                                 }}
                             >
                                 <StoreIcon sx={{ fontSize: 60, color: 'grey.400', mb: 2 }} />
@@ -347,7 +347,7 @@ const HomePage = () => {
                                     showLastButton
                                     sx={{
                                         '& .MuiPagination-ul': {
-                                            backgroundColor: 'white',
+                                            backgroundColor: 'primary.main',
                                             borderRadius: 2,
                                             p: 1,
                                             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
@@ -364,7 +364,7 @@ const HomePage = () => {
                     mt: 8, 
                     p: 6, 
                     textAlign: 'center',
-                    background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
+                    background: 'primary.main'
                 }}>
                     <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
                         ¿No encuentras lo que buscas?
