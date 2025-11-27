@@ -65,9 +65,9 @@ const HomePage = () => {
         setSearchTerm(event.target.value);
     };
 
-    const filteredMugs = mugs.filter(mug =>
-        mug.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        mug.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredMugs = (mugs || []).filter(mug =>
+        (mug?.name ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (mug?.description ?? '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (loading && page === 0) {
@@ -298,14 +298,14 @@ const HomePage = () => {
                 ) : (
                     <>
                         <Grid container spacing={3} sx={{ mb: 6 }} justifyContent="center">
-                            {(searchTerm ? filteredMugs : mugs).map((mug) => (
+                            {((searchTerm ? filteredMugs : mugs) || []).map((mug) => (
                                 <Grid item key={mug.id} xs={12} sm={6} md={4} lg={3}>
                                     <MugCard product={mug} />
                                 </Grid>
                             ))}
                         </Grid>
 
-                        {(searchTerm ? filteredMugs : mugs).length === 0 && (
+                        {((searchTerm ? filteredMugs : mugs) || []).length === 0 && (
                             <Paper 
                                 sx={{ 
                                     p: 8, 
