@@ -57,5 +57,16 @@ export const apiService = {
     updateSupply: activeService.updateSupply,
     deleteSupply: activeService.deleteSupply,
 
+    // Orders endpoints
+    // GET /app-api/orders - Get paginated list of orders
+    // GET /app-api/orders/{codigo_seguimiento} - Get order tracking info by code
+    // GET /app-api/orders/admin/{codigo_seguimiento} - Get order details for admin
+    // POST /app-api/orders/ - Create new order
+    // PUT /app-api/orders/{codigo_seguimiento} - Update order (admin)
+    getOrders: activeService.getOrders,
+    getOrderByCode: activeService.getOrderByCode,
+    getAdminOrderByCode: activeService.getAdminOrderByCode,
     createOrder: activeService.createOrder,
+    updateOrder: activeService.updateOrder,
+
 };

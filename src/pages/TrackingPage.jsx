@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useSearchParams } from 'react-router-dom'; // Importar hook para leer URL
-import { 
-    Container, TextField, Button, Typography, Paper, Box, 
-    Alert, CircularProgress, Divider 
+import {
+    Container, Grid, TextField, Button, Typography, Paper, Box,
+    Alert, CircularProgress, Divider, Avatar
 } from '@mui/material';
+import { apiService } from '../services/apiService';
 
 const TrackingPage = () => {
     // 1. Leer el código de la URL (ej: /track?code=XYZ123)
@@ -16,7 +16,7 @@ const TrackingPage = () => {
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+
     // Función para buscar el pedido en el backend
     const fetchOrder = async (code) => {
         if (!code) return; // No buscar si el código está vacío
@@ -24,15 +24,11 @@ const TrackingPage = () => {
         setLoading(true);
         setOrder(null);
         setError(null);
-        
+
         try {
-            // El endpoint que asumes para el seguimiento
-            const url = `${API_BASE_URL}/app-api/pedidos/seguimiento/${code.trim()}`;
-            // Usamos axios para la llamada
-            const response = await axios.get(url); 
-            
-            // Asumimos que la respuesta tiene una estructura como { codigo_seguimiento: '...', estado: '...', items: [...] }
-            setOrder(response.data); 
+
+            const data = await apiService.getOrderByCode(code);
+            setOrder(data);
 
         } catch (err) {
             console.error("Tracking Error:", err.response || err.message);
@@ -88,41 +84,51 @@ const TrackingPage = () => {
                 <Box sx={{ mt: 3 }}>
                     {error && <Alert severity="error">{error}</Alert>}
                 </Box>
-                
+
                 {order && (
                     <Box sx={{ mt: 4, pt: 3, borderTop: '1px solid #eee' }}>
-                        <Typography variant="h5" gutterBottom>Detalles del Pedido</Typography>
-                        <Grid container spacing={1}>
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="body1">
-                                    **Código:** {order.codigo_seguimiento}
+                        <Typography variant="h4" gutterBottom mb={3}>Detalles del Pedido</Typography>
+                        <Grid container spacing={1} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <Grid size={{ xs: 12, md: 6 }}>
+                                <Typography variant="body">
+                                    Código: {order.code}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <Typography variant="body1">
-                                    **Estado:** <span style={{ fontWeight: 'bold', color: order.estado === 'Entregado' ? 'green' : 'orange' }}>{order.estado || 'Pendiente'}</span>
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant="body1">
-                                    **Fecha del Pedido:** {new Date(order.fecha_pedido).toLocaleDateString()}
+                                    Estado: <span style={{ fontWeight: 'bold', color: order.status === 'Entregado' ? 'green' : 'orange' }}>{order.status || 'Pendiente'}</span>
                                 </Typography>
                             </Grid>
                         </Grid>
-                        
+
                         <Divider sx={{ my: 2 }} />
 
-                        <Typography variant="h6" gutterBottom>Artículos:</Typography>
+                        <Typography variant="h5" gutterBottom>Artículos:</Typography>
                         <ul>
-                            {order.items.map((item, index) => (
-                                <li key={index}>
-                                    {item.nombre || item.tazaNombre} - Cantidad: **{item.cantidad}**
-                                </li>
+                            {order.products.map((product, index) => (
+                                <Paper key={product.productName} elevation={1} sx={{ p: 2, mb: 2 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        {/* Detalles del Producto */}
+                                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                            <Avatar
+                                                src={product.productImageUrl}
+                                                alt={product.productName}
+                                                variant="rounded"
+                                                sx={{ width: 60, height: 60 }}
+                                            />
+                                        </Box>
+                                        <Box sx={{ minWidth: 0 }}>
+                                            <Typography variant="h6">{product.productName}</Typography>
+                                            <Typography variant="h6">{"Cantidad: " + product.quantity}</Typography>
+                                        </Box>
+                                    </Box>
+                                </Paper>
+
                             ))}
                         </ul>
-                        
+
                         <Typography variant="h6" sx={{ mt: 2 }}>
-                            Total Pagado: **${order.total.toFixed(2)}**
+                            Total Pagado: ${order.total.toFixed(2)}
                         </Typography>
                     </Box>
                 )}
