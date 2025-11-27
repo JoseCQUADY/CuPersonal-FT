@@ -7,6 +7,7 @@ import {
     Button, Divider, List, ListItem, ListItemText, Alert, Avatar
     // Eliminamos Select/MenuItem/FormControl y los íconos de edición del carrito
 } from '@mui/material';
+import { apiService } from '../services/apiService';
 
 // 1. Estado inicial completo del cliente (alineado con la necesidad del backend)
 const initialFormData = {
@@ -60,20 +61,18 @@ const CheckoutPage = () => {
                 // Método de pago se puede manejar en el backend o añadir aquí
                 metodoPago: 'tarjeta_credito', // Asumimos un valor por defecto o de un campo de pago futuro
             },
-            items: cartItems.map(item => ({
-                tazaId: item.id, // Alineado con la estructura del backend
-                cantidad: item.quantity,
-                precioUnitario: item.price,
+            products: cartItems.map(item => ({
+                id: item.id, // Alineado con la estructura del backend
+                quantity: item.quantity
             })),
             total: calculateTotal(), // Enviamos el total calculado por el frontend
         };
 
         try {
-            // 3. Llamada a la API usando axios
-            const response = await axios.post(`${API_BASE_URL}/app-api/pedidos`, orderPayload);
+            const data = await apiService.createOrder(orderPayload);
 
-            // Asumimos que la respuesta incluye el código de seguimiento
-            //const codigoSeguimiento = "ACB_SADASDASD_ASD_ASD_" || response.data.purchaseCode;
+            // Recuperamos el código de seguimiento
+            const codigoSeguimiento = data.code;
 
             if (!codigoSeguimiento) {
                 throw new Error("El backend no devolvió un código de seguimiento.");

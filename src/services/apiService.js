@@ -57,13 +57,5 @@ export const apiService = {
     updateSupply: activeService.updateSupply,
     deleteSupply: activeService.deleteSupply,
 
-    // Order endpoint - Uses mock for now (can be connected when backend is ready)
-    createOrder: (orderData) => {
-        // Mock order creation for now
-        return Promise.resolve({
-            id: `order_${Date.now()}`,
-            ...orderData,
-            createdAt: new Date().toISOString()
-        });
-    }
+    createOrder: activeService.createOrder,
 };

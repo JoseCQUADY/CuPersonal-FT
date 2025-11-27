@@ -291,5 +291,24 @@ export const realApiService = {
         } catch (error) {
             handleApiError(error);
         }
+    },
+
+    /**
+     * POST /app-api/orders
+     * Create a new order
+     */
+    createOrder: async (orderData) => {
+        try {
+            console.log("Creating order with data:", orderData);
+            console.log("Order products:", orderData.products);
+            const response = await appApi.post('/orders',
+                {
+                    products: orderData.products
+                }
+            );
+            return response.data;
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 };
