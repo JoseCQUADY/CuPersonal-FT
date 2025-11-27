@@ -19,7 +19,7 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         const fetchSupplies = async () => {
             try {
                 const data = await apiService.getSupplies();
-                setAvailableSupplies(data.content);
+                setAvailableSupplies(data);
             } catch (error) {
                 console.warn("API Get Supplies for modal failed, using mock data.", error);
                 setAvailableSupplies(mockSuppliesResponse.content);
@@ -85,9 +85,10 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                 <Divider sx={{ my: 2 }}>Materiales Requeridos</Divider>
                 <Stack direction="row" spacing={1} alignItems="center">
                     <FormControl fullWidth>
-                        <InputLabel>Insumo</InputLabel>
+                        <InputLabel>Insmuo</InputLabel>
                         <Select value={selectedSupply} onChange={(e) => setSelectedSupply(e.target.value)} label="Insumo">
-                            {availableSupplies.map(s => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>)}
+                            {availableSupplies && availableSupplies.length > 0 ? availableSupplies.map(s => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>) :
+                                <MenuItem disabled>No hay insumos disponibles</MenuItem>}
                         </Select>
                     </FormControl>
                     <TextField label="Cantidad" type="number" value={supplyQuantity} onChange={(e) => setSupplyQuantity(e.target.value)} sx={{ width: '100px' }} />

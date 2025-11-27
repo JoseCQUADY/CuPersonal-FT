@@ -295,7 +295,8 @@ const DashboardPage = () => {
                                     </Button>
                                     <Button
                                         component={RouterLink}
-                                        to="/admin/products/new"
+                                        to="/admin/products/"
+                                        state={{ openCreate: true }}
                                         variant="outlined"
                                         startIcon={<AddIcon />}
                                         sx={{ py: 1.5 }}

@@ -6,12 +6,24 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { apiService } from '../../services/apiService';
 import { mockProductsResponse } from '../../mockData';
 import ProductFormModal from './ProductFormModal';
+import { useLocation } from "react-router-dom";
 
 const ManageProductsPage = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+
+    // Estado para el modal de Crear/Editar
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Manejo de apertura del modal desde la navegación
+    const location = useLocation();
+    const openCreateFromNavigation = location.state?.openCreate || false;
+    useEffect(() => {
+        if (openCreateFromNavigation) {
+            handleOpenCreateModal();
+        }
+    }, [openCreateFromNavigation]);
 
     const fetchProducts = useCallback(async () => {
         setLoading(true);
@@ -30,6 +42,7 @@ const ManageProductsPage = () => {
         fetchProducts();
     }, [fetchProducts]);
 
+    // Manejar la creación o edición de un producto
     const handleOpenCreateModal = () => {
         setEditingProduct(null);
         setIsModalOpen(true);
@@ -66,6 +79,7 @@ const ManageProductsPage = () => {
         handleCloseModal();
     };
 
+    // Manejar la eliminación de un producto
     const handleDelete = async (productId) => {
         if (window.confirm('¿Seguro que quieres eliminar este producto?')) {
             try {
