@@ -82,28 +82,28 @@ const ManageProductsPage = () => {
 
     return (
         <Box>
-            <Paper sx={{ 
+            <Paper sx={{
                 p: 3,
                 borderRadius: 2,
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
             }}>
-                <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    mb: 3 
+                    mb: 3
                 }}>
-                    <Typography 
-                        variant="h5" 
-                        sx={{ 
+                    <Typography
+                        variant="h5"
+                        sx={{
                             fontWeight: 600,
                             color: 'primary.main'
                         }}
                     >
                         Gestión de Productos
                     </Typography>
-                    <Button 
-                        variant="contained" 
+                    <Button
+                        variant="contained"
                         onClick={handleOpenCreateModal}
                         sx={{
                             borderRadius: 2,
@@ -115,8 +115,8 @@ const ManageProductsPage = () => {
                     </Button>
                 </Box>
 
-                <TableContainer 
-                    sx={{ 
+                <TableContainer
+                    sx={{
                         borderRadius: 2,
                         border: '1px solid',
                         borderColor: 'divider',
@@ -136,88 +136,97 @@ const ManageProductsPage = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {products.map((product) => (
-                                <TableRow 
-                                    key={product.id}
-                                    sx={{ 
-                                        '&:hover': { 
-                                            bgcolor: 'action.hover' 
-                                        }
-                                    }}
-                                >
-                                    <TableCell sx={{ fontFamily: 'monospace' }}>{product.id}</TableCell>
-                                    <TableCell sx={{ fontWeight: 500 }}>{product.name}</TableCell>
-                                    <TableCell 
-                                        sx={{ 
-                                            maxWidth: 300,
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap'
+                            {products && products.length > 0 ? products.map((product) => {
+                                return (
+                                    <TableRow
+                                        key={product.id}
+                                        sx={{
+                                            '&:hover': {
+                                                bgcolor: 'action.hover'
+                                            }
                                         }}
                                     >
-                                        {product.description}
-                                    </TableCell>
-                                    <TableCell sx={{ 
-                                        fontWeight: 600,
-                                        color: 'primary.main'
-                                    }}>
-                                        ${product.price.toFixed(2)}
-                                    </TableCell>
-                                    <TableCell>
-                                        {product.imageUrl && (
-                                            <Box
-                                                component="img"
-                                                src={product.imageUrl}
-                                                alt={product.name}
-                                                sx={{
-                                                    width: 50,
-                                                    height: 50,
-                                                    objectFit: 'cover',
-                                                    borderRadius: 1,
-                                                    border: '1px solid',
-                                                    borderColor: 'divider'
-                                                }}
-                                            />
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
-                                            <IconButton 
-                                                onClick={() => handleOpenEditModal(product)}
-                                                size="small"
-                                                sx={{
-                                                    color: 'primary.main',
-                                                    '&:hover': {
-                                                        bgcolor: 'primary.light',
-                                                        color: 'white'
-                                                    }
-                                                }}
-                                            >
-                                                <EditIcon fontSize="small" />
-                                            </IconButton>
-                                            <IconButton 
-                                                onClick={() => handleDelete(product.id)}
-                                                size="small"
-                                                sx={{
-                                                    color: 'error.main',
-                                                    '&:hover': {
-                                                        bgcolor: 'error.main',
-                                                        color: 'white'
-                                                    }
-                                                }}
-                                            >
-                                                <DeleteIcon fontSize="small" />
-                                            </IconButton>
-                                        </Box>
+                                        <TableCell sx={{ fontFamily: 'monospace' }}>{product.id}</TableCell>
+                                        <TableCell sx={{ fontWeight: 500 }}>{product.name}</TableCell>
+                                        <TableCell
+                                            sx={{
+                                                maxWidth: 300,
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap'
+                                            }}
+                                        >
+                                            {product.description}
+                                        </TableCell>
+                                        <TableCell sx={{
+                                            fontWeight: 600,
+                                            color: 'primary.main'
+                                        }}>
+                                            ${product.price.toFixed(2)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {product.imageUrl && (
+                                                <Box
+                                                    component="img"
+                                                    src={product.imageUrl}
+                                                    alt={product.name}
+                                                    sx={{
+                                                        width: 50,
+                                                        height: 50,
+                                                        objectFit: 'cover',
+                                                        borderRadius: 1,
+                                                        border: '1px solid',
+                                                        borderColor: 'divider'
+                                                    }}
+                                                />
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                                                <IconButton
+                                                    onClick={() => handleOpenEditModal(product)}
+                                                    size="small"
+                                                    sx={{
+                                                        color: 'primary.main',
+                                                        '&:hover': {
+                                                            bgcolor: 'primary.light',
+                                                            color: 'white'
+                                                        }
+                                                    }}
+                                                >
+                                                    <EditIcon fontSize="small" />
+                                                </IconButton>
+                                                <IconButton
+                                                    onClick={() => handleDelete(product.id)}
+                                                    size="small"
+                                                    sx={{
+                                                        color: 'error.main',
+                                                        '&:hover': {
+                                                            bgcolor: 'error.main',
+                                                            color: 'white'
+                                                        }
+                                                    }}
+                                                >
+                                                    <DeleteIcon fontSize="small" />
+                                                </IconButton>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }) : (
+                                <TableRow>
+                                    <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                                        <Typography color="text.secondary">No hay Productos disponibles</Typography>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Paper>
 
-            <ProductFormModal 
+            <ProductFormModal
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 product={editingProduct}

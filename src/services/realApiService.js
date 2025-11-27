@@ -3,21 +3,23 @@
 import axios from 'axios';
 
 // API Base URLs - configure these based on your environment
-const AUTH_API_BASE_URL = '/auth-api';
-const APP_API_BASE_URL = '/app-api';
+const AUTH_API_BASE_URL = 'http://localhost:8081/';
+const APP_API_BASE_URL = 'http://localhost:8081/';
 
 // Create axios instances with default configurations
 const authApi = axios.create({
     baseURL: AUTH_API_BASE_URL,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
     }
 });
 
 const appApi = axios.create({
     baseURL: APP_API_BASE_URL,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
     }
 });
 
@@ -39,9 +41,9 @@ appApi.interceptors.request.use(
 const handleApiError = (error) => {
     if (error.response) {
         // Server responded with error status
-        const message = error.response.data?.message || 
-                       error.response.data?.error || 
-                       `Error ${error.response.status}: ${error.response.statusText}`;
+        const message = error.response.data?.message ||
+            error.response.data?.error ||
+            `Error ${error.response.status}: ${error.response.statusText}`;
         throw new Error(message);
     } else if (error.request) {
         // Request was made but no response
@@ -79,7 +81,7 @@ export const realApiService = {
     /**
      * POST /auth-api/login
      * Login user and get token
-     */
+     
     login: async (email, password) => {
         try {
             const response = await authApi.post('/login', {
@@ -100,6 +102,19 @@ export const realApiService = {
             handleApiError(error);
         }
     },
+    */
+    login: async () => {
+        return {
+            "message": "Login successful",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            "user": {
+                "id": "u123456",
+                "name": "Mike",
+                "lastName": "Castillo",
+                "email": "email@example.com"
+            }
+        }
+    },
 
     // ==================
     // Products endpoints (public)
@@ -109,11 +124,9 @@ export const realApiService = {
      * GET /app-api/products
      * Get paginated list of products
      */
-    getProducts: async (page = 0, size = 10) => {
+    getProducts: async () => {// page y size por defecto en el Back
         try {
-            const response = await appApi.get('/products', {
-                params: { page, size }
-            });
+            const response = await appApi.get('/products');
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -209,11 +222,9 @@ export const realApiService = {
      * GET /app-api/supplies/
      * Get paginated list of supplies
      */
-    getSupplies: async (page = 0, size = 10) => {
+    getSupplies: async () => {// page y size por defecto en el Back
         try {
-            const response = await appApi.get('/supplies/', {
-                params: { page, size }
-            });
+            const response = await appApi.get('/supplies');
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -239,7 +250,7 @@ export const realApiService = {
      */
     createSupply: async (supplyData) => {
         try {
-            const response = await appApi.post('/supplies/', {
+            const response = await appApi.post('/supplies', {
                 name: supplyData.name,
                 unit: supplyData.unit,
                 quantity: supplyData.quantity,

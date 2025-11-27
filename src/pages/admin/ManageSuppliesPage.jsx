@@ -11,43 +11,44 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import { useLocation } from "react-router-dom";
 
 // Mock data fallback - To use only mock data, switch to mockApiService in apiService.js
 const mockSuppliesResponse = {
-  content: [
-    {
-      id: 501,
-      name: "Taza blanca base",
-      unit: "pza",
-      quantity: 120,
-      minimumQuantity: 20
-    },
-    {
-      id: 505,
-      name: "Pintura negra para cerámica",
-      unit: "ml",
-      quantity: 1500,
-      minimumQuantity: 300
-    },
-    {
-      id: 504,
-      name: "Caja de cartón",
-      unit: "pza",
-      quantity: 50,
-      minimumQuantity: 50
-    }
-  ],
-  page: 0,
-  size: 10,
-  totalElements: 3,
-  totalPages: 1
+    content: [
+        {
+            id: 501,
+            name: "Taza blanca base",
+            unit: "pza",
+            quantity: 120,
+            minimumQuantity: 20
+        },
+        {
+            id: 505,
+            name: "Pintura negra para cerámica",
+            unit: "ml",
+            quantity: 1500,
+            minimumQuantity: 300
+        },
+        {
+            id: 504,
+            name: "Caja de cartón",
+            unit: "pza",
+            quantity: 50,
+            minimumQuantity: 50
+        }
+    ],
+    page: 0,
+    size: 10,
+    totalElements: 3,
+    totalPages: 1
 };
 
 // Estado inicial para el formulario de Insumo (Crear/Editar)
 const initialSupplyForm = {
     id: null,
     name: '',
-    unit: 'pza', // Valor por defecto
+    unit: 'MILLILITER', // Valor por defecto
     quantity: 0,
     minimumQuantity: 1,
 };
@@ -63,6 +64,15 @@ const ManageSuppliesPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [modalError, setModalError] = useState(null);
 
+    // Manejo de apertura del modal desde la navegación
+    const location = useLocation();
+    const openCreateFromNavigation = location.state?.openCreate || false;
+    useEffect(() => {
+        if (openCreateFromNavigation) {
+            handleOpenCreate();
+        }
+    }, [openCreateFromNavigation]);
+
     // --- Funciones de Fetch y CRUD ---
 
     const fetchSupplies = useCallback(async () => {
@@ -70,7 +80,7 @@ const ManageSuppliesPage = () => {
         setError(null);
         try {
             const data = await apiService.getSupplies(0, 50);
-            setSupplies(data.content); 
+            setSupplies(data);
         } catch (err) {
             console.warn("API Get Supplies failed, using mock data.", err);
             setSupplies(mockSuppliesResponse.content);
@@ -109,7 +119,7 @@ const ManageSuppliesPage = () => {
             // Recargar la lista y cerrar el modal
             setIsModalOpen(false);
             setFormData(initialSupplyForm);
-            fetchSupplies(); 
+            fetchSupplies();
 
         } catch (err) {
             const msg = err.message || `Error al ${formData.id ? 'editar' : 'crear'} el insumo.`;
@@ -169,14 +179,14 @@ const ManageSuppliesPage = () => {
 
     return (
         <Box>
-            <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center', 
-                mb: 4 
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 4
             }}>
-                <Typography 
-                    variant="h4" 
+                <Typography
+                    variant="h4"
                     component="h1"
                     sx={{
                         fontWeight: 600,
@@ -200,12 +210,12 @@ const ManageSuppliesPage = () => {
                 </Button>
             </Box>
 
-            <Paper sx={{ 
+            <Paper sx={{
                 borderRadius: 2,
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
             }}>
-                <TableContainer 
-                    sx={{ 
+                <TableContainer
+                    sx={{
                         borderRadius: 2,
                         maxHeight: '70vh',
                         overflow: 'auto'
@@ -224,14 +234,14 @@ const ManageSuppliesPage = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {supplies.map((supply) => {
+                            {supplies && supplies.length > 0 ? supplies.map((supply) => {
                                 const isLowStock = supply.quantity < supply.minimumQuantity;
                                 return (
-                                    <TableRow 
-                                        key={supply.id} 
+                                    <TableRow
+                                        key={supply.id}
                                         sx={{
                                             bgcolor: isLowStock ? 'error.light' : 'inherit',
-                                            '&:hover': { 
+                                            '&:hover': {
                                                 bgcolor: isLowStock ? 'error.light' : 'action.hover'
                                             }
                                         }}
@@ -239,9 +249,9 @@ const ManageSuppliesPage = () => {
                                         <TableCell sx={{ fontFamily: 'monospace' }}>{supply.id}</TableCell>
                                         <TableCell sx={{ fontWeight: 500 }}>{supply.name}</TableCell>
                                         <TableCell align="center">
-                                            <Typography 
-                                                variant="caption" 
-                                                sx={{ 
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
                                                     bgcolor: 'primary.light',
                                                     color: 'white',
                                                     px: 1,
@@ -254,8 +264,8 @@ const ManageSuppliesPage = () => {
                                             </Typography>
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Typography 
-                                                sx={{ 
+                                            <Typography
+                                                sx={{
                                                     fontWeight: 600,
                                                     color: isLowStock ? 'error.main' : 'success.main'
                                                 }}
@@ -271,7 +281,7 @@ const ManageSuppliesPage = () => {
                                         <TableCell align="center">
                                             {isLowStock ? (
                                                 <Tooltip title="Inventario Bajo - ¡Reabastecer ahora!">
-                                                    <Box sx={{ 
+                                                    <Box sx={{
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         bgcolor: 'error.main',
@@ -285,7 +295,7 @@ const ManageSuppliesPage = () => {
                                                 </Tooltip>
                                             ) : (
                                                 <Tooltip title="Inventario Suficiente">
-                                                    <Box sx={{ 
+                                                    <Box sx={{
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         bgcolor: 'success.main',
@@ -301,8 +311,8 @@ const ManageSuppliesPage = () => {
                                         </TableCell>
                                         <TableCell align="center">
                                             <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
-                                                <IconButton 
-                                                    color="primary" 
+                                                <IconButton
+                                                    color="primary"
                                                     onClick={() => handleOpenEdit(supply)}
                                                     size="small"
                                                     sx={{
@@ -314,7 +324,7 @@ const ManageSuppliesPage = () => {
                                                 >
                                                     <EditIcon fontSize="small" />
                                                 </IconButton>
-                                                <IconButton 
+                                                <IconButton
                                                     onClick={() => handleDeleteSupply(supply.id)}
                                                     size="small"
                                                     sx={{
@@ -331,24 +341,30 @@ const ManageSuppliesPage = () => {
                                         </TableCell>
                                     </TableRow>
                                 );
-                            })}
+                            }) : (
+                                <TableRow>
+                                    <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                                        <Typography color="text.secondary">No hay insumos disponibles</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Paper>
 
             {/* Modal de Crear/Editar Insumo */}
-            <Dialog 
-                open={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
-                fullWidth 
+            <Dialog
+                open={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                fullWidth
                 maxWidth="sm"
                 PaperProps={{
                     sx: { borderRadius: 2 }
                 }}
             >
-                <DialogTitle sx={{ 
-                    bgcolor: 'primary.main', 
+                <DialogTitle sx={{
+                    bgcolor: 'primary.main',
                     color: 'white',
                     fontWeight: 600
                 }}>
@@ -412,17 +428,17 @@ const ManageSuppliesPage = () => {
                         </Grid>
                     </DialogContent>
                     <DialogActions sx={{ p: 2, gap: 1 }}>
-                        <Button 
-                            onClick={() => setIsModalOpen(false)} 
+                        <Button
+                            onClick={() => setIsModalOpen(false)}
                             disabled={isSubmitting}
                             sx={{ borderRadius: 2 }}
                         >
                             Cancelar
                         </Button>
-                        <Button 
-                            type="submit" 
-                            variant="contained" 
-                            color="primary" 
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
                             disabled={isSubmitting}
                             sx={{ borderRadius: 2, px: 3 }}
                         >
