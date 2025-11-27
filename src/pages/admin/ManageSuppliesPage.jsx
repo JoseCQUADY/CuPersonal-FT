@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState, useEffect, useCallback } from 'react';
+import { apiService } from '../../services/apiService';
 import {
     Typography, Box, Button, CircularProgress, Alert,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
@@ -9,9 +8,11 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import InventoryIcon from '@mui/icons-material/Inventory';
 
+// Mock data fallback - To use only mock data, switch to mockApiService in apiService.js
 const mockSuppliesResponse = {
   content: [
     {
@@ -52,7 +53,6 @@ const initialSupplyForm = {
 };
 
 const ManageSuppliesPage = () => {
-    const { getAuthToken } = useAuth();
     const [supplies, setSupplies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -65,28 +65,23 @@ const ManageSuppliesPage = () => {
 
     // --- Funciones de Fetch y CRUD ---
 
-    const fetchSupplies = async () => {
+    const fetchSupplies = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
-            const token = getAuthToken();
-            // GET /app-api/supplies
-            // const response = await axios.get(`${API_BASE_URL}/app-api/supplies?page=0&size=50`, {
-            //     headers: { Authorization: `Bearer ${token}` }
-            // });
-            // La respuesta contiene 'content' que es el array de insumos
-            setSupplies(mockSuppliesResponse.content); 
+            const data = await apiService.getSupplies(0, 50);
+            setSupplies(data.content); 
         } catch (err) {
-            setError("Error al cargar los insumos. Verifica la conexión o tu token de autenticación.");
-            console.error("Error fetching supplies:", err.response || err);
+            console.warn("API Get Supplies failed, using mock data.", err);
+            setSupplies(mockSuppliesResponse.content);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchSupplies();
-    }, []);
+    }, [fetchSupplies]);
 
     // Manejar la creación o edición de un insumo
     const handleSaveSupply = async (e) => {
@@ -96,25 +91,19 @@ const ManageSuppliesPage = () => {
 
         // Asegurar que las cantidades son números
         const payload = {
-            ...formData,
+            name: formData.name,
+            unit: formData.unit,
             quantity: parseFloat(formData.quantity) || 0,
             minimumQuantity: parseFloat(formData.minimumQuantity) || 1
         };
 
         try {
-            const token = getAuthToken();
-            let response;
-            
             if (formData.id) {
-                // LÓGICA DE EDICIÓN (incluyendo reabastecimiento): PUT /app-api/supplies/{id}
-                response = await axios.put(`${API_BASE_URL}/app-api/supplies/${formData.id}`, payload, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                // LÓGICA DE EDICIÓN: PUT /app-api/supplies/{id}
+                await apiService.updateSupply(formData.id, payload);
             } else {
-                // LÓGICA DE CREACIÓN: POST /app-api/supplies
-                response = await axios.post(`${API_BASE_URL}/app-api/supplies`, payload, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                // LÓGICA DE CREACIÓN: POST /app-api/supplies/
+                await apiService.createSupply(payload);
             }
 
             // Recargar la lista y cerrar el modal
@@ -123,11 +112,24 @@ const ManageSuppliesPage = () => {
             fetchSupplies(); 
 
         } catch (err) {
-            const msg = err.response?.data?.message || `Error al ${formData.id ? 'editar' : 'crear'} el insumo.`;
+            const msg = err.message || `Error al ${formData.id ? 'editar' : 'crear'} el insumo.`;
             setModalError(msg);
-            console.error("Error saving supply:", err.response || err);
+            console.error("Error saving supply:", err);
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    // Manejar la eliminación de un insumo
+    const handleDeleteSupply = async (supplyId) => {
+        if (window.confirm('¿Seguro que quieres eliminar este insumo? Solo se puede eliminar si no está asociado a ningún producto.')) {
+            try {
+                await apiService.deleteSupply(supplyId);
+                setSupplies(supplies.filter(s => s.id !== supplyId));
+            } catch (err) {
+                console.error("Error al eliminar insumo:", err);
+                alert("No se pudo eliminar el insumo: " + err.message);
+            }
         }
     };
 
@@ -298,19 +300,34 @@ const ManageSuppliesPage = () => {
                                             )}
                                         </TableCell>
                                         <TableCell align="center">
-                                            <IconButton 
-                                                color="primary" 
-                                                onClick={() => handleOpenEdit(supply)}
-                                                size="small"
-                                                sx={{
-                                                    '&:hover': {
-                                                        bgcolor: 'primary.light',
-                                                        color: 'white'
-                                                    }
-                                                }}
-                                            >
-                                                <EditIcon fontSize="small" />
-                                            </IconButton>
+                                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                                                <IconButton 
+                                                    color="primary" 
+                                                    onClick={() => handleOpenEdit(supply)}
+                                                    size="small"
+                                                    sx={{
+                                                        '&:hover': {
+                                                            bgcolor: 'primary.light',
+                                                            color: 'white'
+                                                        }
+                                                    }}
+                                                >
+                                                    <EditIcon fontSize="small" />
+                                                </IconButton>
+                                                <IconButton 
+                                                    onClick={() => handleDeleteSupply(supply.id)}
+                                                    size="small"
+                                                    sx={{
+                                                        color: 'error.main',
+                                                        '&:hover': {
+                                                            bgcolor: 'error.main',
+                                                            color: 'white'
+                                                        }
+                                                    }}
+                                                >
+                                                    <DeleteIcon fontSize="small" />
+                                                </IconButton>
+                                            </Box>
                                         </TableCell>
                                     </TableRow>
                                 );

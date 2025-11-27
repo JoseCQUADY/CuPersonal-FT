@@ -46,25 +46,21 @@ const ManageProductsPage = () => {
     };
 
     const handleSaveProduct = async (productData) => {
-        // Lógica de simulación para C-U-D
         if (productData.id) { // Actualizar
             try {
-                // const updatedProduct = await apiService.updateProduct(productData.id, productData);
-                // setProducts(products.map(p => p.id === productData.id ? updatedProduct : p));
-                console.log("Simulando actualización de producto:", productData);
-                setProducts(products.map(p => p.id === productData.id ? productData : p));
+                const updatedProduct = await apiService.updateProduct(productData.id, productData);
+                setProducts(products.map(p => p.id === productData.id ? updatedProduct : p));
             } catch (error) {
-                console.error("Error al actualizar (simulado)", error);
+                console.error("Error al actualizar producto:", error);
+                alert("Error al actualizar el producto: " + error.message);
             }
         } else { // Crear
             try {
-                // const newProduct = await apiService.createProduct(productData);
-                // setProducts([...products, newProduct]);
-                const newProduct = { ...productData, id: Date.now() }; // ID falso
-                console.log("Simulando creación de producto:", newProduct);
+                const newProduct = await apiService.createProduct(productData);
                 setProducts([...products, newProduct]);
             } catch (error) {
-                console.error("Error al crear (simulado)", error);
+                console.error("Error al crear producto:", error);
+                alert("Error al crear el producto: " + error.message);
             }
         }
         handleCloseModal();
@@ -73,12 +69,11 @@ const ManageProductsPage = () => {
     const handleDelete = async (productId) => {
         if (window.confirm('¿Seguro que quieres eliminar este producto?')) {
             try {
-                // await apiService.deleteProduct(productId);
-                console.log("Simulando eliminación de producto ID:", productId);
+                await apiService.deleteProduct(productId);
                 setProducts(products.filter(p => p.id !== productId));
             } catch (error) {
-                console.error("Error al eliminar (simulado)", error);
-                alert("No se pudo eliminar el producto.");
+                console.error("Error al eliminar producto:", error);
+                alert("No se pudo eliminar el producto: " + error.message);
             }
         }
     };
