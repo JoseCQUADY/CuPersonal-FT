@@ -34,6 +34,7 @@ const ManageOrdersPage = () => {
 
 
     const handleSaveOrder = async (orderData) => {
+        console.log("Saving order data:", orderData);
         try {
             const updatedOrder = await apiService.updateOrder(orderData.code, orderData);
             setOrders(orders.map(o => o.id === updatedOrder.id ? updatedOrder : o));
@@ -182,7 +183,7 @@ const ManageOrdersPage = () => {
                                                         fontWeight: 600,
                                                     }}
                                                 >
-                                                    {order.createdAt}
+                                                    {order.email}
                                                 </Typography>
                                             </TableCell>
                                             <TableCell align="center">

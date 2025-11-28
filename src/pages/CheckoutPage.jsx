@@ -69,6 +69,7 @@ const CheckoutPage = () => {
         };
 
         try {
+            console.log("Payload de pedido enviado al backend:", orderPayload);
             const data = await apiService.createOrder(orderPayload);
 
             // Recuperamos el código de seguimiento

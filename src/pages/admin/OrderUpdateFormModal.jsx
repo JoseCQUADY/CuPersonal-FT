@@ -24,7 +24,10 @@ const OrderUpdateFormModal = ({ open, onClose, order, onSave }) => {
         setModalError(null);
 
         try {
-            await apiService.updateOrder(order.code, orderStatus);
+            //await apiService.updateOrder(order.code, orderStatus);
+            await onSave({ ...order, status: orderStatus });
+            //await onSave(order.code, orderStatus);
+
         } catch (err) {
             const msg = err.message || `Error al ${order.id ? 'editar' : 'crear'} el insumo.`;
             setModalError(msg);

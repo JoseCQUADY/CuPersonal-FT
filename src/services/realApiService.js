@@ -342,10 +342,14 @@ export const realApiService = {
      * Create a new order
      */
     createOrder: async (orderData) => {
+        console.log("Creating order with data:", orderData);
+        console.log("Order products:", orderData.products);
+        console.log("Order email:", orderData.cliente.email);
         try {
             const response = await appApi.post('/orders',
                 {
-                    products: orderData.products
+                    products: orderData.products,
+                    email: orderData.cliente.email
                 }
             );
             return response.data;
@@ -358,10 +362,10 @@ export const realApiService = {
      * PUT /app-api/orders/{{code}}
      * Update an existing order (admin)
      */
-    updateOrder: async (code, status) => {
+    updateOrder: async (code, orderData) => {
         try {
             const response = await appApi.put(`/orders/${code}`, {
-                status: status
+                status: orderData.status
             });
             return response.data;
         } catch (error) {
