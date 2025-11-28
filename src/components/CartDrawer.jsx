@@ -215,7 +215,7 @@ const CartDrawer = ({ open, onClose }) => {
                         p: 2, 
                         borderTop: '1px solid',
                         borderColor: 'divider',
-                        bgcolor: 'grey.50'
+                        bgcolor: 'paper.main'
                     }}>
                         <Box sx={{ mb: 2 }}>
                             <Box sx={{ 

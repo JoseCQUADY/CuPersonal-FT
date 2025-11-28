@@ -79,7 +79,7 @@ const LoginPage = () => {
                     sx={{ 
                         p: 6, 
                         borderRadius: 2,
-                        background: 'white',
+                        background: 'primary.main',
                         boxShadow: '0 8px 32px rgba(0,102,204,0.2)',
                         border: '1px solid rgba(255,255,255,0.2)'
                     }}

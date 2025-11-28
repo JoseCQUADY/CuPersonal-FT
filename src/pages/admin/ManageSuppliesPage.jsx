@@ -53,11 +53,8 @@ const ManageSuppliesPage = () => {
         try {
             const data = await apiService.getSupplies(pageNum);
             setTotalElements(data.totalElements);
-            console.log("Total Elements:", data.totalElements);
             setTotalPages(data.totalPages);
-            console.log("Total Pages:", data.totalPages);
             setPage(data.number);
-            console.log("Current Page:", data.number);
 
             setSupplies(data.content);
         } catch (err) {
