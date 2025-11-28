@@ -24,7 +24,9 @@ import {
 const DashboardPage = () => {
     const { user, logout } = useAuth();
     const [supplies, setSupplies] = useState([]);
+    const [suppliesContext, setAllSupplies] = useState([]);
     const [products, setProducts] = useState([]);
+    const [productsContext, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -36,9 +38,13 @@ const DashboardPage = () => {
                 apiService.getSupplies(0, 50),
                 apiService.getProducts(0, 50)
             ]);
-            
+
             setSupplies(suppliesData.content || []);
+            setAllSupplies(suppliesData || []);
+
             setProducts(productsData.content || []);
+            setAllProducts(productsData || []);
+
         } catch (err) {
             console.error('Error fetching dashboard data:', err);
             setError('Error al cargar los datos del dashboard');
@@ -52,9 +58,9 @@ const DashboardPage = () => {
     }, []);
 
     const lowStockSupplies = supplies.filter(supply => supply.quantity <= supply.minimumQuantity);
-    const totalProducts = products.length;
-    const totalSupplies = supplies.length;
-    const averagePrice = products.length > 0 
+    const totalProducts = productsContext.totalElements;
+    const totalSupplies = suppliesContext.totalElements;
+    const averagePrice = products.length > 0
         ? (products.reduce((sum, product) => sum + product.price, 0) / products.length).toFixed(2)
         : 0;
 
@@ -63,8 +69,8 @@ const DashboardPage = () => {
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
             {/* Header moderno estilo Ánfora */}
-            <Paper 
-                sx={{ 
+            <Paper
+                sx={{
                     bgcolor: 'primary.main',
                     color: 'white',
                     p: 4,
@@ -87,13 +93,13 @@ const DashboardPage = () => {
                                 </Typography>
                             </Box>
                         </Box>
-                        
+
                         <Button
                             variant="contained"
                             color="secondary"
                             startIcon={<LogoutIcon />}
                             onClick={logout}
-                            sx={{ 
+                            sx={{
                                 px: 3,
                                 py: 1.5,
                                 fontWeight: 600,
@@ -108,10 +114,10 @@ const DashboardPage = () => {
 
             <Container maxWidth="lg">
                 {/* Métricas principales */}
-                <Grid container spacing={3} sx={{ mb: 4 }}>
+                <Grid container spacing={3} sx={{ mb: 4 }} justifyContent="center">
                     <Grid item xs={12} sm={6} md={3}>
-                        <Card sx={{ 
-                            textAlign: 'center', 
+                        <Card sx={{
+                            textAlign: 'center',
                             p: 3,
                             background: 'linear-gradient(135deg, #0066CC 0%, #3399FF 100%)',
                             color: 'white'
@@ -125,10 +131,10 @@ const DashboardPage = () => {
                             </Typography>
                         </Card>
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6} md={3}>
-                        <Card sx={{ 
-                            textAlign: 'center', 
+                        <Card sx={{
+                            textAlign: 'center',
                             p: 3,
                             background: 'linear-gradient(135deg, #FF6B35 0%, #FF8F65 100%)',
                             color: 'white'
@@ -142,12 +148,12 @@ const DashboardPage = () => {
                             </Typography>
                         </Card>
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6} md={3}>
-                        <Card sx={{ 
-                            textAlign: 'center', 
+                        <Card sx={{
+                            textAlign: 'center',
                             p: 3,
-                            background: lowStockSupplies.length > 0 
+                            background: lowStockSupplies.length > 0
                                 ? 'linear-gradient(135deg, #E74C3C 0%, #F39C12 100%)'
                                 : 'linear-gradient(135deg, #27AE60 0%, #2ECC71 100%)',
                             color: 'white'
@@ -161,10 +167,10 @@ const DashboardPage = () => {
                             </Typography>
                         </Card>
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6} md={3}>
-                        <Card sx={{ 
-                            textAlign: 'center', 
+                        <Card sx={{
+                            textAlign: 'center',
                             p: 3,
                             background: 'linear-gradient(135deg, #3498DB 0%, #5DADE2 100%)',
                             color: 'white'
@@ -193,15 +199,15 @@ const DashboardPage = () => {
                         {error}
                     </Alert>
                 ) : lowStockSupplies.length > 0 ? (
-                    <Alert 
-                        severity="warning" 
-                        icon={<WarningIcon />} 
+                    <Alert
+                        severity="warning"
+                        icon={<WarningIcon />}
                         sx={{ mb: 4 }}
                         action={
-                            <Button 
-                                component={RouterLink} 
-                                to="/admin/supplies" 
-                                color="inherit" 
+                            <Button
+                                component={RouterLink}
+                                to="/admin/supplies"
+                                color="inherit"
                                 variant="outlined"
                                 size="small"
                             >
@@ -217,7 +223,7 @@ const DashboardPage = () => {
                         </Typography>
                         <Stack direction="row" spacing={1} flexWrap="wrap">
                             {lowStockSupplies.slice(0, 3).map(supply => (
-                                <Chip 
+                                <Chip
                                     key={supply.id}
                                     label={`${supply.name} (${supply.quantity}/${supply.minimumQuantity})`}
                                     size="small"
@@ -226,7 +232,7 @@ const DashboardPage = () => {
                                 />
                             ))}
                             {lowStockSupplies.length > 3 && (
-                                <Chip 
+                                <Chip
                                     label={`+${lowStockSupplies.length - 3} más`}
                                     size="small"
                                     variant="outlined"
@@ -251,8 +257,8 @@ const DashboardPage = () => {
                 <Grid container spacing={4} sx={{ mb: 4 }}>
                     {/* Gestión de Productos */}
                     <Grid item xs={12} md={6}>
-                        <Card 
-                            sx={{ 
+                        <Card
+                            sx={{
                                 height: '100%',
                                 background: 'linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(51, 153, 255, 0.05) 100%)',
                                 border: '2px solid rgba(0, 102, 204, 0.1)',
@@ -277,12 +283,12 @@ const DashboardPage = () => {
                                         </Typography>
                                     </Box>
                                 </Box>
-                                
+
                                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6, color: 'text.secondary' }}>
-                                    Crea nuevos productos, actualiza precios y descripciones, 
-                                    gestiona imágenes y configura materiales necesarios para cada taza.
+                                    Gestiona los productos, elimina o crea nuevos especificando los insumos  y actualizando los precios
+                                    para cada taza.
                                 </Typography>
-                                
+
                                 <Box sx={{ display: 'flex', gap: 2 }}>
                                     <Button
                                         component={RouterLink}
@@ -295,7 +301,8 @@ const DashboardPage = () => {
                                     </Button>
                                     <Button
                                         component={RouterLink}
-                                        to="/admin/products/new"
+                                        to="/admin/products/"
+                                        state={{ openCreate: true }}
                                         variant="outlined"
                                         startIcon={<AddIcon />}
                                         sx={{ py: 1.5 }}
@@ -309,8 +316,8 @@ const DashboardPage = () => {
 
                     {/* Gestión de Insumos */}
                     <Grid item xs={12} md={6}>
-                        <Card 
-                            sx={{ 
+                        <Card
+                            sx={{
                                 height: '100%',
                                 background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 143, 101, 0.05) 100%)',
                                 border: '2px solid rgba(255, 107, 53, 0.1)',
@@ -335,12 +342,11 @@ const DashboardPage = () => {
                                         </Typography>
                                     </Box>
                                 </Box>
-                                
+
                                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6, color: 'text.secondary' }}>
-                                    Controla el stock de materiales, establece niveles mínimos, 
-                                    recibe alertas automáticas y gestiona proveedores de insumos.
+                                    Observa el stock actual de materiales, su estado,gestionalo, establece niveles mínimos y reabastece tu inventario.
                                 </Typography>
-                                
+
                                 <Box sx={{ display: 'flex', gap: 2 }}>
                                     <Button
                                         component={RouterLink}
@@ -354,7 +360,8 @@ const DashboardPage = () => {
                                     </Button>
                                     <Button
                                         component={RouterLink}
-                                        to="/admin/supplies/new"
+                                        to="/admin/supplies/"
+                                        state={{ openCreate: true }}
                                         variant="outlined"
                                         color="secondary"
                                         startIcon={<AddIcon />}
@@ -366,6 +373,65 @@ const DashboardPage = () => {
                             </CardContent>
                         </Card>
                     </Grid>
+
+                    {/* Gestión de Ordenes */}
+                    <Grid item xs={12} md={6}>
+                        <Card
+                            sx={{
+                                height: '100%',
+                                background: 'linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(51, 153, 255, 0.05) 100%)',
+                                border: '2px solid rgba(0, 102, 204, 0.1)',
+                                transition: 'all 0.3s ease',
+                                '&:hover': {
+                                    border: '2px solid rgba(0, 102, 204, 0.3)',
+                                    transform: 'translateY(-2px)'
+                                }
+                            }}
+                        >
+                            <CardContent sx={{ p: 4 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                                    <Avatar sx={{ bgcolor: 'primary.main', mr: 3, width: 56, height: 56 }}>
+                                        <StoreIcon sx={{ fontSize: 28 }} />
+                                    </Avatar>
+                                    <Box>
+                                        <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                            Lista de pedidos
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Administra las ordenes de los clientes
+                                        </Typography>
+                                    </Box>
+                                </Box>
+
+                                <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6, color: 'text.secondary' }}>
+                                    Gestiona las ordenes de los clientes, actualiza sus estados y los detalles específicas para cada uno de los pedidos.
+                                </Typography>
+
+                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                    <Button
+                                        component={RouterLink}
+                                        to="/admin/orders"
+                                        variant="contained"
+                                        startIcon={<EditIcon />}
+                                        sx={{ flexGrow: 1, py: 1.5 }}
+                                    >
+                                        Gestionar Ordenes
+                                    </Button>
+                                    <Button
+                                        component={RouterLink}
+                                        to="/admin/orders/"
+                                        state={{ openCreate: true }}
+                                        variant="outlined"
+                                        startIcon={<AddIcon />}
+                                        sx={{ py: 1.5 }}
+                                    >
+                                        Nuevo
+                                    </Button>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
                 </Grid>
 
                 {/* Sección de reportes y análisis */}
@@ -383,19 +449,19 @@ const DashboardPage = () => {
                                     </Typography>
                                 </Box>
                             </Box>
-                            <Chip 
-                                label="Próximamente" 
+                            <Chip
+                                label="Próximamente"
                                 color="info"
                                 variant="outlined"
                                 icon={<AssignmentIcon />}
                             />
                         </Box>
-                        
+
                         <Divider sx={{ my: 3 }} />
-                        
-                        <Grid container spacing={3}>
+
+                        <Grid container spacing={3} justifyContent="center">
                             <Grid item xs={12} md={4}>
-                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'grey.50' }}>
+                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'primary.main' }}>
                                     <Typography variant="h6" sx={{ mb: 1 }}>Ventas del Mes</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         Análisis de productos más vendidos
@@ -403,7 +469,7 @@ const DashboardPage = () => {
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'grey.50' }}>
+                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'primary.main' }}>
                                     <Typography variant="h6" sx={{ mb: 1 }}>Tendencias de Stock</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         Predicción de reabastecimiento
@@ -411,7 +477,7 @@ const DashboardPage = () => {
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'grey.50' }}>
+                                <Paper sx={{ p: 3, textAlign: 'center', bgcolor: 'primary.main' }}>
                                     <Typography variant="h6" sx={{ mb: 1 }}>Rentabilidad</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         Análisis de márgenes por producto
@@ -419,9 +485,9 @@ const DashboardPage = () => {
                                 </Paper>
                             </Grid>
                         </Grid>
-                        
+
                         <Typography variant="body2" color="text.secondary" sx={{ mt: 3, textAlign: 'center' }}>
-                            Las funcionalidades de análisis avanzado, reportes de ventas y gestión de pedidos 
+                            Las funcionalidades de análisis avanzado, reportes de ventas y gestión de pedidos
                             estarán disponibles en la próxima actualización del sistema.
                         </Typography>
                     </CardContent>

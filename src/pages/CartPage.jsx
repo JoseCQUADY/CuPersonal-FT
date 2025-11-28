@@ -1,23 +1,23 @@
 // src/pages/CartPage.jsx
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { 
-    Typography, Container, Box, Button, Grid, Paper, 
-    TextField, IconButton, Divider
+import {
+    Typography, Container, Box, Button, Grid, Paper,
+    TextField, IconButton, Divider, Avatar
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useCart } from '../context/CartContext'; // Asegúrate que la ruta sea correcta
 
 const CartPage = () => {
-    const { 
-        cartItems, 
-        updateQuantity, 
-        removeItem, 
+    const {
+        cartItems,
+        updateQuantity,
+        removeItem,
         clearCart,
         calculateTotal
     } = useCart();
-    
+
     // Función para manejar el cambio de cantidad
     const handleQuantityChange = (id, newQuantity) => {
         const quantity = parseInt(newQuantity);
@@ -35,10 +35,10 @@ const CartPage = () => {
                 <Typography variant="body1" sx={{ mb: 3 }}>
                     ¡Parece que aún no has agregado tazas a tu pedido!
                 </Typography>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    component={RouterLink} 
+                <Button
+                    variant="contained"
+                    color="primary"
+                    component={RouterLink}
                     to="/"
                 >
                     Volver a la Tienda
@@ -58,14 +58,22 @@ const CartPage = () => {
                 <Grid item xs={12} md={8}>
                     {cartItems.map((item) => (
                         <Paper key={item.id} elevation={1} sx={{ p: 2, mb: 2 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+
                                 {/* Detalles del Producto */}
-                                <Box sx={{ flexGrow: 1 }}>
-                                    <Typography variant="h6">{item.name}</Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Precio unitario: ${item.price}
-                                    </Typography>
+                                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexGrow: 1 }}>
+                                    <Avatar
+                                        src={item.imageUrl}
+                                        alt={item.name}
+                                        variant="rounded"
+                                        sx={{ width: 60, height: 60 }}
+                                    />
+                                    <Box sx={{ minWidth: 0 }}>
+                                        <Typography variant="h6">{item.name}</Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Precio unitario: ${item.price}
+                                        </Typography>
+                                    </Box>
                                 </Box>
 
                                 {/* Cantidad y Botones */}
@@ -83,8 +91,8 @@ const CartPage = () => {
                                         ${(item.price * item.quantity).toFixed(2)}
                                     </Typography>
 
-                                    <IconButton 
-                                        color="error" 
+                                    <IconButton
+                                        color="error"
                                         onClick={() => removeItem(item.id)}
                                         aria-label={`Eliminar ${item.name}`}
                                     >
@@ -96,16 +104,16 @@ const CartPage = () => {
                     ))}
 
                     <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-                        <Button 
-                            startIcon={<ArrowBackIcon />} 
-                            component={RouterLink} 
+                        <Button
+                            startIcon={<ArrowBackIcon />}
+                            component={RouterLink}
                             to="/"
                         >
                             Seguir Comprando
                         </Button>
-                        <Button 
-                            variant="outlined" 
-                            color="error" 
+                        <Button
+                            variant="outlined"
+                            color="error"
                             onClick={clearCart}
                         >
                             Vaciar Carrito
@@ -127,15 +135,15 @@ const CartPage = () => {
                                 ${calculateTotal().toFixed(2)}
                             </Typography>
                         </Box>
-                        
-                        {/* Aquí se pueden añadir impuestos o envío si fueran implementados */}
+
+                        {/* Añadir impuestos o envío */}
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                             <Typography variant="body2">Costo de Envío (Gratis):</Typography>
                             <Typography variant="body2">$0.00</Typography>
                         </Box>
 
                         <Divider sx={{ mt: 1, mb: 2 }} />
-                        
+
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                             <Typography variant="h6">Total a Pagar:</Typography>
                             <Typography variant="h6" color="primary">
@@ -143,11 +151,11 @@ const CartPage = () => {
                             </Typography>
                         </Box>
 
-                        <Button 
-                            variant="contained" 
-                            color="primary" 
-                            fullWidth 
-                            component={RouterLink} 
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            component={RouterLink}
                             to="/checkout"
                         >
                             Proceder al Pago

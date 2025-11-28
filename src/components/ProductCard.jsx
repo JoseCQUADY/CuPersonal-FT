@@ -10,7 +10,8 @@ const ProductCard = ({ product }) => {
   return (
     <Card 
       sx={{ 
-        height: 420, // Altura fija para uniformidad
+        height: 450, // Altura fija para uniformidad
+        width: 350, // Ancho fijo para uniformidad
         display: 'flex', 
         flexDirection: 'column', 
         transition: 'all 0.3s ease-in-out',

@@ -13,7 +13,8 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
     const [availableSupplies, setAvailableSupplies] = useState([]);
     const [selectedSupply, setSelectedSupply] = useState('');
     const [supplyQuantity, setSupplyQuantity] = useState(1);
-    
+    const [price, setPrice] = useState('');
+
     useEffect(() => {
         // Cargar insumos disponibles para el selector
         const fetchSupplies = async () => {
@@ -26,68 +27,58 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
             }
         };
 
-        // Cargar datos detallados del producto si estamos editando
-        const fetchProductDetails = async (productId) => {
-            try {
-                // const data = await apiService.getAdminProductById(productId);
-                // setFormData(data);
-                
-                // Simulación
-                console.log("Simulando GET /app-api/products/admin/" + productId);
-                setFormData(mockAdminProductDetail);
-            } catch (error) {
-                console.warn("API Get Admin Product failed, using mock data.", error);
-                setFormData(mockAdminProductDetail);
-            }
-        };
-
         if (open) {
             fetchSupplies();
-            if (product) {
-                fetchProductDetails(product.id);
-            } else {
-                setFormData({ name: '', description: '', price: '', imageUrl: '', materials: [] });
-            }
+            setFormData({ name: '', description: '', price: '', imageUrl: '', materials: [] });
         }
+
     }, [product, open]);
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleAddMaterial = () => {
         if (!selectedSupply || supplyQuantity <= 0) return;
-        const newMaterial = { supplyId: selectedSupply, quantityPerUnit: parseInt(supplyQuantity, 10) };
+        const newMaterial = { id: selectedSupply, quantityPerUnit: parseInt(supplyQuantity, 10) };
         // Evitar duplicados
-        if (formData.materials.some(m => m.supplyId === newMaterial.supplyId)) return;
-        
+        if (formData.materials.some(m => m.id === newMaterial.id)) return;
+
         setFormData({ ...formData, materials: [...formData.materials, newMaterial] });
         setSelectedSupply('');
         setSupplyQuantity(1);
     };
 
-    const handleRemoveMaterial = (supplyId) => {
-        setFormData({ ...formData, materials: formData.materials.filter(m => m.supplyId !== supplyId) });
+    const handleRemoveMaterial = (id) => {
+        setFormData({ ...formData, materials: formData.materials.filter(m => m.id !== id) });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave({ ...formData, price: parseFloat(formData.price) });
+        var priceValue = parseFloat(price);
+        if (isNaN(priceValue) || priceValue <= 0) {
+            alert("Por favor, ingrese un precio válido.");
+            return;
+        }
+        onSave({ ...formData, price: priceValue });
     };
 
-    const getSupplyName = (supplyId) => availableSupplies.find(s => s.id === supplyId)?.name || 'Desconocido';
+    const getSupplyName = (id) => availableSupplies.find(s => s.id === id)?.name || 'Desconocido';
 
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={style} component="form" onSubmit={handleSubmit}>
                 <Typography variant="h6">{product ? 'Editar Producto' : 'Crear Producto'}</Typography>
                 <TextField name="name" label="Nombre" value={formData.name || ''} onChange={handleChange} fullWidth margin="normal" required />
-                {/* ... otros textfields para description, price, imageUrl ... */}
-                
+                <TextField name="description" label="Descripción" value={formData.description || ''} onChange={handleChange} fullWidth margin="normal" required />
+                <TextField name="price" label="Precio" value={price} onChange={(e) => setPrice(e.target.value)} fullWidth margin="normal" required />
+                <TextField name="imageUrl" label="URL de la Imagen" value={formData.imageUrl || ''} onChange={handleChange} fullWidth margin="normal" required />
+
                 <Divider sx={{ my: 2 }}>Materiales Requeridos</Divider>
                 <Stack direction="row" spacing={1} alignItems="center">
                     <FormControl fullWidth>
-                        <InputLabel>Insumo</InputLabel>
+                        <InputLabel>Insmuo</InputLabel>
                         <Select value={selectedSupply} onChange={(e) => setSelectedSupply(e.target.value)} label="Insumo">
-                            {availableSupplies.map(s => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>)}
+                            {availableSupplies && availableSupplies.length > 0 ? availableSupplies.map(s => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>) :
+                                <MenuItem disabled>No hay insumos disponibles</MenuItem>}
                         </Select>
                     </FormControl>
                     <TextField label="Cantidad" type="number" value={supplyQuantity} onChange={(e) => setSupplyQuantity(e.target.value)} sx={{ width: '100px' }} />
@@ -95,12 +86,12 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                 </Stack>
                 <List dense>
                     {formData.materials?.map(material => (
-                        <ListItem key={material.supplyId} secondaryAction={<IconButton edge="end" onClick={() => handleRemoveMaterial(material.supplyId)}><DeleteIcon /></IconButton>}>
-                            <ListItemText primary={getSupplyName(material.supplyId)} secondary={`Cantidad: ${material.quantityPerUnit}`} />
+                        <ListItem key={material.id} secondaryAction={<IconButton edge="end" onClick={() => handleRemoveMaterial(material.id)}><DeleteIcon /></IconButton>}>
+                            <ListItemText primary={getSupplyName(material.id)} secondary={`Cantidad: ${material.quantityPerUnit}`} />
                         </ListItem>
                     ))}
                 </List>
-                
+
                 <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
                     <Button type="submit" variant="contained">Guardar</Button>
                     <Button onClick={onClose}>Cancelar</Button>

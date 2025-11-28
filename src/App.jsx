@@ -22,6 +22,7 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import ManageProductsPage from './pages/admin/ManageProductsPage';
 import ManageSuppliesPage from './pages/admin/ManageSuppliesPage';
+import ManageOrdersPage from './pages/admin/ManageOrdersPage';
 
 // Componente de Protección de Rutas
 const ProtectedRoute = () => {
@@ -56,6 +57,7 @@ function AppRoutes() {
                         <Route index element={<DashboardPage />} />
                         <Route path="products" element={<ManageProductsPage />} />
                         <Route path="supplies" element={<ManageSuppliesPage />} />
+                        <Route path="orders" element={<ManageOrdersPage />} />
                     </Route>
 
                     {/* Ruta 404/Not Found */}
