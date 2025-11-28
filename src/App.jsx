@@ -15,6 +15,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import TrackingPage from './pages/TrackingPage';
+import InformationPage from './pages/InformationPage';
 
 // --- Componentes de Administración ---
 import LoginPage from './pages/LoginPage';
@@ -47,6 +48,7 @@ function AppRoutes() {
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/confirmation/:orderCode" element={<ConfirmationPage />} />
                     <Route path="/track" element={<TrackingPage />} />
+                    <Route path="/information" element={<InformationPage />} />
                     
                     {/* Rutas de Autenticación */}
                     <Route path="/admin/login" element={<LoginPage />} />

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { 
-    AppBar, 
-    Toolbar, 
-    Typography, 
-    Box, 
-    Button, 
-    Badge, 
-    Container, 
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Box,
+    Button,
+    Badge,
+    Container,
     IconButton,
     Menu,
     MenuItem,
@@ -47,10 +47,10 @@ const Layout = ({ children }) => {
     const location = useLocation();
     const theme = useMuiTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-    
+    const informationPageRef = "/information";
+
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [categoriesMenu, setCategoriesMenu] = useState(null);
-    
+
     const totalItems = getTotalItems();
     const isAdminRoute = location.pathname.startsWith('/admin');
 
@@ -78,17 +78,17 @@ const Layout = ({ children }) => {
     };
 
     return (
-        <Box sx={{ 
-            minHeight: '100vh', 
-            display: 'flex', 
+        <Box sx={{
+            minHeight: '100vh',
+            display: 'flex',
             flexDirection: 'column',
-            backgroundColor: 'background.default' 
+            backgroundColor: 'background.default'
         }}>
             {/* Top Bar - Información de contacto */}
             {!isAdminRoute && (
-                <Box sx={{ 
-                    bgcolor: 'primary.main', 
-                    color: 'white', 
+                <Box sx={{
+                    bgcolor: 'primary.main',
+                    color: 'white',
                     py: 1,
                     display: { xs: 'none', md: 'block' }
                 }}>
@@ -104,15 +104,29 @@ const Layout = ({ children }) => {
                                     <Typography variant="body2">info@cupersonal.com</Typography>
                                 </Box>
                             </Box>
-                            
                             <Box sx={{ display: 'flex', gap: 1 }}>
-                                <IconButton size="small" sx={{ color: 'white' }}>
+                                <IconButton size="small"
+                                    component="a"
+                                    href="https://facebook.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    sx={{ color: 'white' }}>
                                     <FacebookIcon sx={{ fontSize: 18 }} />
                                 </IconButton>
-                                <IconButton size="small" sx={{ color: 'white' }}>
+                                <IconButton size="small"
+                                    component="a"
+                                    href="https://instagram.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    sx={{ color: 'white' }}>
                                     <InstagramIcon sx={{ fontSize: 18 }} />
                                 </IconButton>
-                                <IconButton size="small" sx={{ color: 'white' }}>
+                                <IconButton size="small"
+                                    component="a"
+                                    href="https://twitter.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    sx={{ color: 'white' }}>
                                     <TwitterIcon sx={{ fontSize: 18 }} />
                                 </IconButton>
                             </Box>
@@ -126,10 +140,10 @@ const Layout = ({ children }) => {
                 <Container maxWidth="lg">
                     <Toolbar sx={{ py: 1 }}>
                         {/* Logo */}
-                        <Box 
-                            component={RouterLink} 
+                        <Box
+                            component={RouterLink}
                             to="/"
-                            sx={{ 
+                            sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 textDecoration: 'none',
@@ -139,9 +153,9 @@ const Layout = ({ children }) => {
                         >
                             <StoreIcon sx={{ mr: 1.5, fontSize: 32, color: 'primary.main' }} />
                             <Box>
-                                <Typography 
-                                    variant="h5" 
-                                    sx={{ 
+                                <Typography
+                                    variant="h5"
+                                    sx={{
                                         fontWeight: 700,
                                         color: 'primary.main',
                                         lineHeight: 1
@@ -149,9 +163,9 @@ const Layout = ({ children }) => {
                                 >
                                     CuPersonal
                                 </Typography>
-                                <Typography 
-                                    variant="caption" 
-                                    sx={{ 
+                                <Typography
+                                    variant="caption"
+                                    sx={{
                                         color: 'text.secondary',
                                         fontSize: '0.7rem',
                                         textTransform: 'uppercase',
@@ -174,46 +188,20 @@ const Layout = ({ children }) => {
                                 >
                                     Inicio
                                 </Button>
-                                
-                                <Button
-                                    color="inherit"
-                                    onClick={handleCategoriesClick}
-                                    endIcon={<CategoryIcon />}
-                                    sx={{ mx: 1, fontWeight: 500 }}
-                                >
-                                    Categorías
-                                </Button>
-                                
-                                <Menu
-                                    anchorEl={categoriesMenu}
-                                    open={Boolean(categoriesMenu)}
-                                    onClose={handleCategoriesClose}
-                                >
-                                    {categories.map((category) => (
-                                        <MenuItem 
-                                            key={category.name}
-                                            component={RouterLink}
-                                            to={category.path}
-                                            onClick={handleCategoriesClose}
-                                        >
-                                            {category.name}
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
 
                                 <Button
                                     color="inherit"
                                     component={RouterLink}
-                                    to="/about"
+                                    to={informationPageRef + "?section=nosotros"}
                                     sx={{ mx: 1, fontWeight: 500 }}
                                 >
                                     Nosotros
                                 </Button>
-                                
+
                                 <Button
                                     color="inherit"
                                     component={RouterLink}
-                                    to="/contact"
+                                    to={informationPageRef + "?section=contacto"}
                                     sx={{ mx: 1, fontWeight: 500 }}
                                 >
                                     Contacto
@@ -226,10 +214,10 @@ const Layout = ({ children }) => {
 
                         {/* Actions */}
                         {!isAdminRoute && (
-                            <IconButton 
-                                color="inherit" 
+                            <IconButton
+                                color="inherit"
                                 onClick={handleCartClick}
-                                sx={{ 
+                                sx={{
                                     mr: 2,
                                     bgcolor: 'rgba(0,102,204,0.1)',
                                     '&:hover': {
@@ -237,8 +225,8 @@ const Layout = ({ children }) => {
                                     }
                                 }}
                             >
-                                <Badge 
-                                    badgeContent={totalItems} 
+                                <Badge
+                                    badgeContent={totalItems}
                                     color="secondary"
                                     sx={{
                                         '& .MuiBadge-badge': {
@@ -254,12 +242,12 @@ const Layout = ({ children }) => {
                                 </Badge>
                             </IconButton>
                         )}
-                        
+
                         {/* Theme Toggle */}
-                        <IconButton 
-                            color="inherit" 
+                        <IconButton
+                            color="inherit"
                             onClick={toggleTheme}
-                            sx={{ 
+                            sx={{
                                 mr: 2,
                                 bgcolor: 'rgba(0,102,204,0.1)',
                                 '&:hover': {
@@ -269,16 +257,16 @@ const Layout = ({ children }) => {
                         >
                             {isDark ? <LightModeIcon /> : <DarkModeIcon />}
                         </IconButton>
-                        
+
                         {/* Admin Button */}
-                        <Button 
+                        <Button
                             color="primary"
-                            variant="outlined" 
-                            component={RouterLink} 
+                            variant="outlined"
+                            component={RouterLink}
                             to={isAuthenticated ? "/admin" : "/admin/login"}
                             startIcon={<AdminIcon />}
                             size="small"
-                            sx={{ 
+                            sx={{
                                 display: { xs: 'none', md: 'flex' }
                             }}
                         >
@@ -310,24 +298,10 @@ const Layout = ({ children }) => {
                         <ListItem button component={RouterLink} to="/" onClick={toggleMobileMenu}>
                             <ListItemText primary="Inicio" />
                         </ListItem>
-                        {categories.map((category) => (
-                            <ListItem 
-                                button 
-                                key={category.name}
-                                component={RouterLink} 
-                                to={category.path}
-                                onClick={toggleMobileMenu}
-                            >
-                                <ListItemIcon>
-                                    <CoffeeIcon />
-                                </ListItemIcon>
-                                <ListItemText primary={category.name} />
-                            </ListItem>
-                        ))}
-                        <ListItem button component={RouterLink} to="/about" onClick={toggleMobileMenu}>
+                        <ListItem button component={RouterLink} to={informationPageRef + "?section=nosotros"} onClick={toggleMobileMenu}>
                             <ListItemText primary="Nosotros" />
                         </ListItem>
-                        <ListItem button component={RouterLink} to="/contact" onClick={toggleMobileMenu}>
+                        <ListItem button component={RouterLink} to={informationPageRef + "?section=contacto"} onClick={toggleMobileMenu}>
                             <ListItemText primary="Contacto" />
                         </ListItem>
                         <ListItem button component={RouterLink} to={isAuthenticated ? "/admin" : "/admin/login"} onClick={toggleMobileMenu}>
@@ -339,10 +313,10 @@ const Layout = ({ children }) => {
                     </List>
                 </Box>
             </Drawer>
-            
+
             {/* Cart Drawer */}
             <CartDrawer open={showCartDrawer} onClose={closeCartDrawer} />
-            
+
             {/* Contenido Principal */}
             <Box component="main" sx={{ flexGrow: 1 }}>
                 {isAdminRoute ? (
@@ -353,22 +327,22 @@ const Layout = ({ children }) => {
                     children
                 )}
             </Box>
-            
+
             {/* Footer corporativo */}
             {!isAdminRoute && (
-                <Box 
-                    component="footer" 
-                    sx={{ 
+                <Box
+                    component="footer"
+                    sx={{
                         bgcolor: '#2C3E50',
                         color: 'white',
                         py: 4,
                         mt: 'auto',
-                        marginTop:5
+                        marginTop: 5
                     }}
                 >
                     <Container maxWidth="lg">
-                        <Box sx={{ 
-                            display: 'grid', 
+                        <Box sx={{
+                            display: 'grid',
                             gridTemplateColumns: { xs: '1fr', md: '2fr 1fr 1fr 1fr' },
                             gap: 4,
                             mb: 3
@@ -382,40 +356,34 @@ const Layout = ({ children }) => {
                                     </Typography>
                                 </Box>
                                 <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.6 }}>
-                                    Tu tienda de confianza para tazas personalizadas y productos únicos. 
+                                    Tu tienda de confianza para tazas personalizadas y productos únicos.
                                     Calidad garantizada y atención personalizada desde 2024.
                                 </Typography>
                                 <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <IconButton size="small" sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }}>
+                                    <IconButton size="small"
+                                        component="a"
+                                        href="https://facebook.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }}>
                                         <FacebookIcon />
                                     </IconButton>
-                                    <IconButton size="small" sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }}>
+                                    <IconButton size="small"
+                                        component="a"
+                                        href="https://instagram.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }}>
                                         <InstagramIcon />
                                     </IconButton>
-                                    <IconButton size="small" sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }}>
+                                    <IconButton size="small"
+                                        component="a"
+                                        href="https://twitter.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.1)' }}>
                                         <TwitterIcon />
                                     </IconButton>
-                                </Box>
-                            </Box>
-
-                            {/* Categories */}
-                            <Box>
-                                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-                                    Productos
-                                </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                    {categories.map((category) => (
-                                        <Button
-                                            key={category.name}
-                                            component={RouterLink}
-                                            to={category.path}
-                                            color="inherit"
-                                            size="small"
-                                            sx={{ justifyContent: 'flex-start', p: 0 }}
-                                        >
-                                            {category.name}
-                                        </Button>
-                                    ))}
                                 </Box>
                             </Box>
 
@@ -425,16 +393,32 @@ const Layout = ({ children }) => {
                                     Atención al Cliente
                                 </Typography>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                    <Button color="inherit" size="small" sx={{ justifyContent: 'flex-start', p: 0 }}>
+                                    <Button color="inherit"
+                                        size="small"
+                                        component={RouterLink}
+                                        to={informationPageRef + "?section=atencion"}
+                                        sx={{ justifyContent: 'flex-start', p: 0 }}>
                                         Centro de Ayuda
                                     </Button>
-                                    <Button color="inherit" size="small" sx={{ justifyContent: 'flex-start', p: 0 }}>
+                                    <Button color="inherit"
+                                        size="small"
+                                        component={RouterLink}
+                                        to={informationPageRef + "?section=atencion"}
+                                        sx={{ justifyContent: 'flex-start', p: 0 }}>
                                         Políticas de Envío
                                     </Button>
-                                    <Button color="inherit" size="small" sx={{ justifyContent: 'flex-start', p: 0 }}>
+                                    <Button color="inherit"
+                                        size="small"
+                                        component={RouterLink}
+                                        to={informationPageRef + "?section=atencion"}
+                                        sx={{ justifyContent: 'flex-start', p: 0 }}>
                                         Devoluciones
                                     </Button>
-                                    <Button color="inherit" size="small" sx={{ justifyContent: 'flex-start', p: 0 }}>
+                                    <Button color="inherit"
+                                        size="small"
+                                        component={RouterLink}
+                                        to={informationPageRef + "?section=atencion"}
+                                        sx={{ justifyContent: 'flex-start', p: 0 }}>
                                         Términos y Condiciones
                                     </Button>
                                 </Box>
@@ -462,7 +446,7 @@ const Layout = ({ children }) => {
                             </Box>
                         </Box>
 
-                        <Box sx={{ 
+                        <Box sx={{
                             borderTop: '1px solid rgba(255,255,255,0.1)',
                             pt: 3,
                             display: 'flex',

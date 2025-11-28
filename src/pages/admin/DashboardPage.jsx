@@ -417,16 +417,6 @@ const DashboardPage = () => {
                                     >
                                         Gestionar Ordenes
                                     </Button>
-                                    <Button
-                                        component={RouterLink}
-                                        to="/admin/orders/"
-                                        state={{ openCreate: true }}
-                                        variant="outlined"
-                                        startIcon={<AddIcon />}
-                                        sx={{ py: 1.5 }}
-                                    >
-                                        Nuevo
-                                    </Button>
                                 </Box>
                             </CardContent>
                         </Card>

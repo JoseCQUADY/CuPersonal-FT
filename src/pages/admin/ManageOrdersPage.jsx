@@ -34,7 +34,6 @@ const ManageOrdersPage = () => {
 
 
     const handleSaveOrder = async (orderData) => {
-        console.log("Saving order data:", orderData);
         try {
             const updatedOrder = await apiService.updateOrder(orderData.code, orderData);
             setOrders(orders.map(o => o.id === updatedOrder.id ? updatedOrder : o));
@@ -202,7 +201,7 @@ const ManageOrdersPage = () => {
                                                         onClick={() => handleOpenEditModal(order)}
                                                         size="small"
                                                         sx={{
-                                                            color: 'white',
+                                                            color: 'primary.main',
                                                             '&:hover': {
                                                                 bgcolor: 'blue',
                                                                 color: 'white'
