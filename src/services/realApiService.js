@@ -342,9 +342,6 @@ export const realApiService = {
      * Create a new order
      */
     createOrder: async (orderData) => {
-        console.log("Creating order with data:", orderData);
-        console.log("Order products:", orderData.products);
-        console.log("Order email:", orderData.cliente.email);
         try {
             const response = await appApi.post('/orders',
                 {

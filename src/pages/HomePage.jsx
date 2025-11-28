@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link as RouterLink} from 'react-router-dom';
 import {
     Grid,
     CircularProgress,
@@ -159,6 +160,24 @@ const HomePage = () => {
                                     }}
                                 >
                                     Personalizar
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="inherit"
+                                    size="large"
+                                    component={RouterLink}
+                                    to="/track"
+                                    sx={{
+                                        px: 4,
+                                        py: 1.5,
+                                        borderColor: 'white',
+                                        '&:hover': {
+                                            borderColor: 'white',
+                                            bgcolor: 'rgba(255,255,255,0.1)'
+                                        }
+                                    }}
+                                >
+                                    Rastrear Pedido
                                 </Button>
                             </Box>
                         </Grid>
