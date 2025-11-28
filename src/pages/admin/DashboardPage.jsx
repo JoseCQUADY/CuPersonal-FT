@@ -41,10 +41,10 @@ const DashboardPage = () => {
 
             setSupplies(suppliesData.content || []);
             setAllSupplies(suppliesData || []);
-            
+
             setProducts(productsData.content || []);
             setAllProducts(productsData || []);
-            
+
         } catch (err) {
             console.error('Error fetching dashboard data:', err);
             setError('Error al cargar los datos del dashboard');
@@ -285,8 +285,8 @@ const DashboardPage = () => {
                                 </Box>
 
                                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6, color: 'text.secondary' }}>
-                                    Crea nuevos productos, actualiza precios y descripciones,
-                                    gestiona imágenes y configura materiales necesarios para cada taza.
+                                    Gestiona los productos, elimina o crea nuevos especificando los insumos  y actualizando los precios
+                                    para cada taza.
                                 </Typography>
 
                                 <Box sx={{ display: 'flex', gap: 2 }}>
@@ -344,8 +344,7 @@ const DashboardPage = () => {
                                 </Box>
 
                                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6, color: 'text.secondary' }}>
-                                    Controla el stock de materiales, establece niveles mínimos,
-                                    recibe alertas automáticas y gestiona proveedores de insumos.
+                                    Observa el stock actual de materiales, su estado,gestionalo, establece niveles mínimos y reabastece tu inventario.
                                 </Typography>
 
                                 <Box sx={{ display: 'flex', gap: 2 }}>
@@ -374,6 +373,65 @@ const DashboardPage = () => {
                             </CardContent>
                         </Card>
                     </Grid>
+
+                    {/* Gestión de Ordenes */}
+                    <Grid item xs={12} md={6}>
+                        <Card
+                            sx={{
+                                height: '100%',
+                                background: 'linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(51, 153, 255, 0.05) 100%)',
+                                border: '2px solid rgba(0, 102, 204, 0.1)',
+                                transition: 'all 0.3s ease',
+                                '&:hover': {
+                                    border: '2px solid rgba(0, 102, 204, 0.3)',
+                                    transform: 'translateY(-2px)'
+                                }
+                            }}
+                        >
+                            <CardContent sx={{ p: 4 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                                    <Avatar sx={{ bgcolor: 'primary.main', mr: 3, width: 56, height: 56 }}>
+                                        <StoreIcon sx={{ fontSize: 28 }} />
+                                    </Avatar>
+                                    <Box>
+                                        <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                            Lista de pedidos
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Administra las ordenes de los clientes
+                                        </Typography>
+                                    </Box>
+                                </Box>
+
+                                <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6, color: 'text.secondary' }}>
+                                    Gestiona las ordenes de los clientes, actualiza sus estados y los detalles específicas para cada uno de los pedidos.
+                                </Typography>
+
+                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                    <Button
+                                        component={RouterLink}
+                                        to="/admin/orders"
+                                        variant="contained"
+                                        startIcon={<EditIcon />}
+                                        sx={{ flexGrow: 1, py: 1.5 }}
+                                    >
+                                        Gestionar Ordenes
+                                    </Button>
+                                    <Button
+                                        component={RouterLink}
+                                        to="/admin/orders/"
+                                        state={{ openCreate: true }}
+                                        variant="outlined"
+                                        startIcon={<AddIcon />}
+                                        sx={{ py: 1.5 }}
+                                    >
+                                        Nuevo
+                                    </Button>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
                 </Grid>
 
                 {/* Sección de reportes y análisis */}

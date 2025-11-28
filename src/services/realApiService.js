@@ -291,5 +291,85 @@ export const realApiService = {
         } catch (error) {
             handleApiError(error);
         }
+    },
+
+    // ==================
+    // Orders endpoints
+    // ==================
+
+
+    /**
+     * GET /app-api/orders/
+     * Get all orders (admin)
+     */
+    getOrders: async (page) => {
+        try {
+            const response = await appApi.get('/orders?page=' + page);
+            return response.data;
+        } catch (error) {
+            handleApiError(error);
+        }
+    },
+
+    /**
+     * GET /app-api/orders/{code}
+     * Get order tracking info by code
+     */
+    getOrderByCode: async (code) => {
+        try {
+            const response = await appApi.get(`/orders/${code}`);
+            return response.data;
+        } catch (error) {
+            handleApiError(error);
+        }
+    },
+
+    /**
+     * GET /app-api/orders/admin/{{code}}
+     * Get and order details for admin
+     */
+    getAdminOrderByCode: async (code) => {
+        try {
+            const response = await appApi.get(`/orders/admin/${code}`);
+            return response.data;
+        } catch (error) {
+            handleApiError(error);
+        }
+    },
+
+    /**
+     * POST /app-api/orders
+     * Create a new order
+     */
+    createOrder: async (orderData) => {
+        console.log("Creating order with data:", orderData);
+        console.log("Order products:", orderData.products);
+        console.log("Order email:", orderData.cliente.email);
+        try {
+            const response = await appApi.post('/orders',
+                {
+                    products: orderData.products,
+                    email: orderData.cliente.email
+                }
+            );
+            return response.data;
+        } catch (error) {
+            handleApiError(error);
+        }
+    },
+
+    /**
+     * PUT /app-api/orders/{{code}}
+     * Update an existing order (admin)
+     */
+    updateOrder: async (code, orderData) => {
+        try {
+            const response = await appApi.put(`/orders/${code}`, {
+                status: orderData.status
+            });
+            return response.data;
+        } catch (error) {
+            handleApiError(error);
+        }
     }
 };

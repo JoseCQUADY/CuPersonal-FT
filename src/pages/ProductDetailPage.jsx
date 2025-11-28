@@ -44,7 +44,7 @@ const ProductDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { addToCart } = useCart();
-    
+
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -162,20 +162,20 @@ const ProductDetailPage = () => {
             </Breadcrumbs>
 
             {/* Back Button */}
-            <Button 
-                startIcon={<ArrowBackIcon />} 
+            <Button
+                startIcon={<ArrowBackIcon />}
                 onClick={handleBack}
                 sx={{ mb: 3 }}
             >
                 Volver
             </Button>
 
-            <Grid container spacing={4}>
+            <Grid container spacing={4} sx={{ flexWrap: 'nowrap' }}>
                 {/* Product Images */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} sx={{ minWidth: 0 }}>
                     <Box sx={{ position: 'sticky', top: 100 }}>
                         {/* Main Image */}
-                        <Paper sx={{ p: 2, mb: 2, position: 'relative' }}>
+                        <Paper sx={{ p: 2, mb: 2, position: 'relative', maxWidth: 550 }}>
                             {hasDiscount && (
                                 <Chip
                                     icon={<OfferIcon />}
@@ -192,7 +192,7 @@ const ProductDetailPage = () => {
                             )}
                             <Box
                                 component="img"
-                                src={mockImages[selectedImage] || product.imageUrl}
+                                src={product.imageUrl || mockImages[selectedImage]}
                                 alt={product.name}
                                 sx={{
                                     width: '100%',
@@ -202,40 +202,11 @@ const ProductDetailPage = () => {
                                 }}
                             />
                         </Paper>
-
-                        {/* Thumbnail Images */}
-                        <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto' }}>
-                            {mockImages.map((image, index) => (
-                                <Paper
-                                    key={index}
-                                    sx={{
-                                        p: 0.5,
-                                        cursor: 'pointer',
-                                        border: selectedImage === index ? '2px solid' : '1px solid',
-                                        borderColor: selectedImage === index ? 'primary.main' : 'divider',
-                                        flexShrink: 0
-                                    }}
-                                    onClick={() => setSelectedImage(index)}
-                                >
-                                    <Box
-                                        component="img"
-                                        src={image}
-                                        alt={`Vista ${index + 1}`}
-                                        sx={{
-                                            width: 80,
-                                            height: 80,
-                                            objectFit: 'cover',
-                                            borderRadius: 0.5
-                                        }}
-                                    />
-                                </Paper>
-                            ))}
-                        </Box>
                     </Box>
                 </Grid>
 
                 {/* Product Info */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} sx={{ minWidth: 0 }}>
                     <Box>
                         {/* Product Title and Rating */}
                         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
@@ -257,9 +228,9 @@ const ProductDetailPage = () => {
                                     ${product.price.toFixed(2)}
                                 </Typography>
                                 {hasDiscount && (
-                                    <Typography 
-                                        variant="h6" 
-                                        sx={{ 
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
                                             textDecoration: 'line-through',
                                             color: 'text.secondary'
                                         }}
@@ -276,7 +247,7 @@ const ProductDetailPage = () => {
                         {/* Stock Status */}
                         <Box sx={{ mb: 3 }}>
                             {!isOutOfStock ? (
-                                <Chip 
+                                <Chip
                                     label={isLowStock ? `¡Solo quedan ${mockStock}!` : 'En stock'}
                                     color={isLowStock ? 'warning' : 'success'}
                                     icon={<VerifiedIcon />}
@@ -322,7 +293,7 @@ const ProductDetailPage = () => {
                             >
                                 {isOutOfStock ? 'Sin Stock' : 'Agregar al Carrito'}
                             </Button>
-                            <IconButton 
+                            <IconButton
                                 color={isFavorite ? 'error' : 'default'}
                                 onClick={() => setIsFavorite(!isFavorite)}
                                 size="large"
@@ -348,7 +319,7 @@ const ProductDetailPage = () => {
                                                 <ShippingIcon fontSize="small" />
                                             </Avatar>
                                         </ListItemAvatar>
-                                        <ListItemText 
+                                        <ListItemText
                                             primary="Envío gratis"
                                             secondary="En compras mayores a $500"
                                         />
@@ -359,7 +330,7 @@ const ProductDetailPage = () => {
                                                 <SecurityIcon fontSize="small" />
                                             </Avatar>
                                         </ListItemAvatar>
-                                        <ListItemText 
+                                        <ListItemText
                                             primary="Garantía de calidad"
                                             secondary="30 días de garantía"
                                         />
@@ -370,7 +341,7 @@ const ProductDetailPage = () => {
                                                 <AssignmentIcon fontSize="small" />
                                             </Avatar>
                                         </ListItemAvatar>
-                                        <ListItemText 
+                                        <ListItemText
                                             primary="Personalización incluida"
                                             secondary="Sin costo adicional"
                                         />
@@ -397,8 +368,8 @@ const ProductDetailPage = () => {
                             {mockReviews.map((review) => (
                                 <Paper key={review.id} sx={{ p: 2, mb: 2 }} variant="outlined">
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                        <Avatar 
-                                            src={review.avatar} 
+                                        <Avatar
+                                            src={review.avatar}
                                             alt={review.user}
                                             sx={{ width: 32, height: 32, mr: 1 }}
                                         />

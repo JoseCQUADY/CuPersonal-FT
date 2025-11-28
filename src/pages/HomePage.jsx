@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Grid, 
-    CircularProgress, 
-    Box, 
-    Typography, 
-    Alert, 
+import {
+    Grid,
+    CircularProgress,
+    Box,
+    Typography,
+    Alert,
     Container,
     Button,
     Paper,
@@ -15,14 +15,15 @@ import {
     Breadcrumbs,
     Link
 } from '@mui/material';
-import { 
+import {
     Search as SearchIcon,
     Store as StoreIcon,
     LocalShipping as ShippingIcon,
     Security as SecurityIcon,
     Support as SupportIcon,
     Star as StarIcon,
-    TrendingUp as TrendingIcon
+    TrendingUp as TrendingIcon,
+    Email as EmailIcon
 } from '@mui/icons-material';
 import MugCard from '../components/ProductCard';
 import { apiService } from '../services/apiService';
@@ -35,6 +36,7 @@ const HomePage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
+    const cupersonalEmail = "info@cupersonal.com";
 
     const fetchMugs = async (pageNum = 0) => {
         try {
@@ -72,12 +74,12 @@ const HomePage = () => {
 
     if (loading && page === 0) {
         return (
-            <Box 
-                sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'center', 
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
                     alignItems: 'center',
-                    minHeight: '60vh' 
+                    minHeight: '60vh'
                 }}
             >
                 <CircularProgress size={60} thickness={4} />
@@ -88,8 +90,8 @@ const HomePage = () => {
     return (
         <>
             {/* Hero Banner - Estilo Ánfora */}
-            <Box sx={{ 
-                bgcolor: 'primary.main', 
+            <Box sx={{
+                bgcolor: 'primary.main',
                 color: 'white',
                 py: { xs: 4, md: 6 },
                 mb: 4
@@ -97,44 +99,44 @@ const HomePage = () => {
                 <Container maxWidth="lg">
                     <Grid container spacing={4} alignItems="center">
                         <Grid item xs={12} md={8}>
-                            <Typography 
-                                variant="h2" 
-                                component="h1" 
-                                gutterBottom 
-                                sx={{ 
+                            <Typography
+                                variant="h2"
+                                component="h1"
+                                gutterBottom
+                                sx={{
                                     fontWeight: 700,
                                     fontSize: { xs: '2rem', md: '3rem' }
                                 }}
                             >
                                 Tazas Personalizadas Premium
                             </Typography>
-                            <Typography 
-                                variant="h5" 
-                                sx={{ 
-                                    mb: 3, 
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    mb: 3,
                                     opacity: 0.9,
                                     fontWeight: 400,
                                     lineHeight: 1.4
                                 }}
                             >
-                                Diseños únicos, calidad garantizada y entrega rápida. 
+                                Diseños únicos, calidad garantizada y entrega rápida.
                                 Más de 10,000 clientes satisfechos.
                             </Typography>
                             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                                <Button 
-                                    variant="contained" 
+                                <Button
+                                    variant="contained"
                                     color="secondary"
                                     size="large"
                                     sx={{ px: 4, py: 1.5 }}
                                 >
                                     Ver Catálogo
                                 </Button>
-                                <Button 
-                                    variant="outlined" 
+                                <Button
+                                    variant="outlined"
                                     color="inherit"
                                     size="large"
-                                    sx={{ 
-                                        px: 4, 
+                                    sx={{
+                                        px: 4,
                                         py: 1.5,
                                         borderColor: 'white',
                                         '&:hover': {
@@ -148,7 +150,7 @@ const HomePage = () => {
                             </Box>
                         </Grid>
                         <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-                            <Box sx={{ 
+                            <Box sx={{
                                 bgcolor: 'rgba(255,255,255,0.1)',
                                 borderRadius: 2,
                                 p: 3,
@@ -228,10 +230,10 @@ const HomePage = () => {
                     </Breadcrumbs>
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography 
-                            variant="h4" 
-                            component="h2" 
-                            sx={{ 
+                        <Typography
+                            variant="h4"
+                            component="h2"
+                            sx={{
                                 fontWeight: 600,
                                 color: 'text.primary',
                                 display: 'flex',
@@ -242,7 +244,7 @@ const HomePage = () => {
                             <TrendingIcon color="primary" />
                             Productos Destacados
                         </Typography>
-                        
+
                         <TextField
                             placeholder="Buscar productos..."
                             value={searchTerm}
@@ -258,10 +260,10 @@ const HomePage = () => {
                             }}
                         />
                     </Box>
-                    
+
                     {totalElements > 0 && (
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Chip 
+                            <Chip
                                 label={`${totalElements} productos encontrados`}
                                 variant="outlined"
                                 color="primary"
@@ -274,13 +276,13 @@ const HomePage = () => {
                 </Box>
 
                 {error && (
-                    <Alert 
-                        severity="warning" 
+                    <Alert
+                        severity="warning"
                         sx={{ mb: 3, borderRadius: 2 }}
                         action={
-                            <Button 
-                                color="inherit" 
-                                size="small" 
+                            <Button
+                                color="inherit"
+                                size="small"
                                 onClick={() => fetchMugs(page)}
                             >
                                 Reintentar
@@ -306,9 +308,9 @@ const HomePage = () => {
                         </Grid>
 
                         {((searchTerm ? filteredMugs : mugs) || []).length === 0 && (
-                            <Paper 
-                                sx={{ 
-                                    p: 8, 
+                            <Paper
+                                sx={{
+                                    p: 8,
                                     textAlign: 'center',
                                     backgroundColor: 'primary.main'
                                 }}
@@ -318,14 +320,14 @@ const HomePage = () => {
                                     {searchTerm ? 'No se encontraron productos' : 'No hay productos disponibles'}
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-                                    {searchTerm 
+                                    {searchTerm
                                         ? `No hay resultados para "${searchTerm}"`
                                         : 'Estamos trabajando para traerte nuevos diseños increíbles.'
                                     }
                                 </Typography>
                                 {searchTerm && (
-                                    <Button 
-                                        variant="outlined" 
+                                    <Button
+                                        variant="outlined"
                                         onClick={() => setSearchTerm('')}
                                     >
                                         Ver todos los productos
@@ -337,8 +339,8 @@ const HomePage = () => {
                         {/* Paginación */}
                         {totalPages > 1 && !searchTerm && (
                             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
-                                <Pagination 
-                                    count={totalPages} 
+                                <Pagination
+                                    count={totalPages}
                                     page={page + 1}
                                     onChange={handlePageChange}
                                     color="primary"
@@ -360,26 +362,40 @@ const HomePage = () => {
                 )}
 
                 {/* Call to Action */}
-                <Paper sx={{ 
-                    mt: 8, 
-                    p: 6, 
+                <Paper sx={{
+                    mt: 8,
+                    p: 6,
                     textAlign: 'center',
-                    background: 'primary.main'
+                    background: 'primary.main',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
                 }}>
                     <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
                         ¿No encuentras lo que buscas?
                     </Typography>
                     <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
-                        Contáctanos para crear un diseño personalizado único para ti
+                        Contáctanos para crear un diseño personalizado único para ti.
                     </Typography>
-                    <Button 
-                        variant="contained" 
+                    <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
+                        Envía un correo a:
+                    </Typography>
+                    <Button
+                        variant="contained"
                         color="primary"
                         size="large"
-                        sx={{ px: 4, py: 1.5 }}
+                        href={`mailto:${cupersonalEmail}`}
+                        sx={{ px: 4, py: 1.5, mb: 3 }}
                     >
-                        Solicitar Cotización
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <EmailIcon sx={{ fontSize: 16 }} />
+                            <Typography variant="body2">{cupersonalEmail}</Typography>
+                        </Box>
                     </Button>
+                    <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
+                        Con tus ideas y requerimientos!
+                    </Typography>
+
                 </Paper>
             </Container>
         </>
