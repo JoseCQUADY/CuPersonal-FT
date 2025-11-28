@@ -358,10 +358,10 @@ export const realApiService = {
      * PUT /app-api/orders/{{code}}
      * Update an existing order (admin)
      */
-    updateOrder: async (code, orderData) => {
+    updateOrder: async (code, status) => {
         try {
             const response = await appApi.put(`/orders/${code}`, {
-                status: orderData.status
+                status: status
             });
             return response.data;
         } catch (error) {
