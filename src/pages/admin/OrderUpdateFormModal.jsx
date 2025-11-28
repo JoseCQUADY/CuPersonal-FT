@@ -1,7 +1,6 @@
 // src/pages/admin/ProductFormModal.jsx
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button, Stack, FormControl, InputLabel, Select, MenuItem, DialogContent, Grid, DialogActions, Paper, Avatar, Alert, List, ListItem, ListItemText, Divider } from '@mui/material';
-import { apiService } from '../../services/apiService';
 
 const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, bgcolor: 'background.paper', boxShadow: 24, p: 4, maxHeight: '90vh', overflowY: 'auto' };
 
@@ -24,10 +23,7 @@ const OrderUpdateFormModal = ({ open, onClose, order, onSave }) => {
         setModalError(null);
 
         try {
-            //await apiService.updateOrder(order.code, orderStatus);
             await onSave({ ...order, status: orderStatus });
-            //await onSave(order.code, orderStatus);
-
         } catch (err) {
             const msg = err.message || `Error al ${order.id ? 'editar' : 'crear'} el insumo.`;
             setModalError(msg);
