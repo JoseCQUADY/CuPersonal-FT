@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Grid,
     CircularProgress,
@@ -37,6 +37,13 @@ const HomePage = () => {
     const [totalElements, setTotalElements] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const cupersonalEmail = "info@cupersonal.com";
+
+    const catalogRef = useRef(null);
+    const contactgRef = useRef(null);
+
+    const goToContact = () => {
+        contactgRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     const fetchMugs = async (pageNum = 0) => {
         try {
@@ -87,6 +94,10 @@ const HomePage = () => {
         );
     }
 
+    const goToCatalog = () => {
+        catalogRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
     return (
         <>
             {/* Hero Banner - Estilo Ánfora */}
@@ -127,6 +138,7 @@ const HomePage = () => {
                                     variant="contained"
                                     color="secondary"
                                     size="large"
+                                    onClick={goToCatalog}
                                     sx={{ px: 4, py: 1.5 }}
                                 >
                                     Ver Catálogo
@@ -135,6 +147,7 @@ const HomePage = () => {
                                     variant="outlined"
                                     color="inherit"
                                     size="large"
+                                    onClick={goToContact}
                                     sx={{
                                         px: 4,
                                         py: 1.5,
@@ -221,7 +234,7 @@ const HomePage = () => {
 
             <Container maxWidth="lg">
                 {/* Breadcrumbs y filtros */}
-                <Box sx={{ mb: 4 }}>
+                <Box ref={catalogRef} style={{ scrollMarginTop: "10px" }} sx={{ mb: 4 }}>
                     <Breadcrumbs sx={{ mb: 2 }}>
                         <Link underline="hover" color="inherit" href="/">
                             Inicio
@@ -362,15 +375,18 @@ const HomePage = () => {
                 )}
 
                 {/* Call to Action */}
-                <Paper sx={{
-                    mt: 8,
-                    p: 6,
-                    textAlign: 'center',
-                    background: 'primary.main',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center'
-                }}>
+                <Paper
+                    ref={contactgRef}
+                    style={{ scrollMarginTop: "10px" }}
+                    sx={{
+                        mt: 8,
+                        p: 6,
+                        textAlign: 'center',
+                        background: 'primary.main',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}>
                     <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
                         ¿No encuentras lo que buscas?
                     </Typography>
