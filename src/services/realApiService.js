@@ -124,7 +124,7 @@ export const realApiService = {
      * GET /app-api/products
      * Get paginated list of products
      */
-    getProducts: async (page) => {// page y size por defecto en el Back
+    getProducts: async (page) => {// Sice por defecto en el Back
         try {
             const response = await appApi.get('/products?page=' + page);
             return response.data;
@@ -156,7 +156,7 @@ export const realApiService = {
      */
     getAdminProductById: async (id) => {
         try {
-            const response = await appApi.get(`/products/admin/${id}`);
+            const response = await authApi.get(`/products/admin/${id}`);
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -169,7 +169,7 @@ export const realApiService = {
      */
     createProduct: async (productData) => {
         try {
-            const response = await appApi.post('/products', {
+            const response = await authApi.post('/products', {
                 name: productData.name,
                 description: productData.description,
                 price: productData.price,
@@ -188,7 +188,7 @@ export const realApiService = {
      */
     updateProduct: async (id, productData) => {
         try {
-            const response = await appApi.put(`/products/${id}`, {
+            const response = await authApi.put(`/products/${id}`, {
                 name: productData.name,
                 description: productData.description,
                 price: productData.price,
@@ -207,7 +207,7 @@ export const realApiService = {
      */
     deleteProduct: async (id) => {
         try {
-            await appApi.delete(`/products/${id}`);
+            await authApi.delete(`/products/${id}`);
             return null;
         } catch (error) {
             handleApiError(error);
@@ -222,9 +222,9 @@ export const realApiService = {
      * GET /app-api/supplies/
      * Get paginated list of supplies
      */
-    getSupplies: async (page) => {// page y size por defecto en el Back
+    getSupplies: async (page) => {// Sice por defecto en el Back
         try {
-            const response = await appApi.get('/supplies?page=' + page);
+            const response = await authApi.get('/supplies?page=' + page);
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -237,7 +237,7 @@ export const realApiService = {
      */
     getSupplyById: async (id) => {
         try {
-            const response = await appApi.get(`/supplies/${id}`);
+            const response = await authApi.get(`/supplies/${id}`);
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -250,7 +250,7 @@ export const realApiService = {
      */
     createSupply: async (supplyData) => {
         try {
-            const response = await appApi.post('/supplies', {
+            const response = await authApi.post('/supplies', {
                 name: supplyData.name,
                 unit: supplyData.unit,
                 quantity: supplyData.quantity,
@@ -268,7 +268,7 @@ export const realApiService = {
      */
     updateSupply: async (id, supplyData) => {
         try {
-            const response = await appApi.put(`/supplies/${id}`, {
+            const response = await authApi.put(`/supplies/${id}`, {
                 name: supplyData.name,
                 unit: supplyData.unit,
                 quantity: supplyData.quantity,
@@ -286,7 +286,7 @@ export const realApiService = {
      */
     deleteSupply: async (id) => {
         try {
-            await appApi.delete(`/supplies/${id}`);
+            await authApi.delete(`/supplies/${id}`);
             return null;
         } catch (error) {
             handleApiError(error);
@@ -304,7 +304,7 @@ export const realApiService = {
      */
     getOrders: async (page) => {
         try {
-            const response = await appApi.get('/orders?page=' + page);
+            const response = await authApi.get('/orders?page=' + page);
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -312,7 +312,7 @@ export const realApiService = {
     },
 
     /**
-     * GET /app-api/orders/{code}
+     * GET /app-api/orders/{code}       (public)
      * Get order tracking info by code
      */
     getOrderByCode: async (code) => {
@@ -325,12 +325,12 @@ export const realApiService = {
     },
 
     /**
-     * GET /app-api/orders/admin/{{code}}
+     * GET /app-api/orders/admin/{{code}}   (Admin)
      * Get and order details for admin
      */
     getAdminOrderByCode: async (code) => {
         try {
-            const response = await appApi.get(`/orders/admin/${code}`);
+            const response = await authApi.get(`/orders/admin/${code}`);
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -338,7 +338,7 @@ export const realApiService = {
     },
 
     /**
-     * POST /app-api/orders
+     * POST /app-api/orders                 (public)
      * Create a new order
      */
     createOrder: async (orderData) => {
@@ -361,7 +361,7 @@ export const realApiService = {
      */
     updateOrder: async (code, orderData) => {
         try {
-            const response = await appApi.put(`/orders/${code}`, {
+            const response = await authApi.put(`/orders/${code}`, {
                 status: orderData.status
             });
             return response.data;

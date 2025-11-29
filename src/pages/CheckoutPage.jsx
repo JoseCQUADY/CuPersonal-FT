@@ -78,6 +78,32 @@ const CheckoutPage = () => {
                 throw new Error("El backend no devolvió un código de seguimiento.");
             }
 
+            // 3. Actualizar el stock de los suministros
+            const products = orderPayload.products;
+
+            for (const product of products) {
+
+                const productDetails = await apiService.getAdminProductById(product.id);
+                console.log("Detalles del producto:", productDetails);
+                console.log("Detalles del producto.data:", productDetails.data);
+
+                for (const supply of productDetails.productSupplies) {
+                    const quantityPerUnit = supply.quantityPerUnit || 1;
+
+                    const supplyDetails = await apiService.getSupplyById(supply.id.supplyId);
+
+                    const updatedSupply = {
+                        name: supplyDetails.name,
+                        unit: supplyDetails.unit,
+                        quantity: supplyDetails.quantity - (quantityPerUnit * product.quantity), // Actualizamos la cantidad restando lo usado
+                        minimumQuantity: supplyDetails.minimumQuantity
+                    };
+
+                    await apiService.updateSupply(supply.id.supplyId, updatedSupply);
+                }
+
+            }
+
             // Éxito: Limpiar carrito y redirigir
             clearCart();
             navigate(`/confirmation/${codigoSeguimiento}`);
