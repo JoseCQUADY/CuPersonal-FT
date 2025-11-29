@@ -102,9 +102,8 @@ const ManageSuppliesPage = () => {
             fetchSupplies();
 
         } catch (err) {
-            const msg = err.message || `Error al ${formData.id ? 'editar' : 'crear'} el insumo.`;
+            const msg = `Error al ${formData.id ? 'editar' : 'crear'} el insumo. Revisa tus datos e intenta de nuevo.`;
             setModalError(msg);
-            console.error("Error saving supply:", err);
         } finally {
             setIsSubmitting(false);
         }

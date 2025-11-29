@@ -84,11 +84,12 @@ const CheckoutPage = () => {
             for (const product of products) {
 
                 const productDetails = await apiService.getAdminProductById(product.id);
-                console.log("Detalles del producto:", productDetails);
-                console.log("Detalles del producto.data:", productDetails.data);
 
                 for (const supply of productDetails.productSupplies) {
                     const quantityPerUnit = supply.quantityPerUnit || 1;
+
+                    console.log(`Actualizando suministro ID: ${supply.id.supplyId} para el producto ID: ${product.id}`);
+                    console.log(`Cantidad por unidad: ${quantityPerUnit}, Cantidad del producto en el pedido: ${product.quantity}`);
 
                     const supplyDetails = await apiService.getSupplyById(supply.id.supplyId);
 
@@ -98,6 +99,7 @@ const CheckoutPage = () => {
                         quantity: supplyDetails.quantity - (quantityPerUnit * product.quantity), // Actualizamos la cantidad restando lo usado
                         minimumQuantity: supplyDetails.minimumQuantity
                     };
+                    console.log("Detalles del suministro:", updatedSupply);
 
                     await apiService.updateSupply(supply.id.supplyId, updatedSupply);
                 }

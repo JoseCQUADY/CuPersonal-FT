@@ -9,17 +9,17 @@ const APP_API_BASE_URL = 'http://localhost:8081/';
 // Create axios instances with default configurations
 const authApi = axios.create({
     baseURL: AUTH_API_BASE_URL,
+    withCredentials: true,
     headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Content-Type': 'application/json'
     }
 });
 
 const appApi = axios.create({
     baseURL: APP_API_BASE_URL,
+    withCredentials: true,
     headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Content-Type': 'application/json'
     }
 });
 
@@ -65,7 +65,7 @@ export const realApiService = {
      */
     register: async (userData) => {
         try {
-            const response = await authApi.post('/register', {
+            const response = await authApi.post('auth/register', {
                 name: userData.name,
                 lastName: userData.lastName,
                 email: userData.email,
@@ -81,28 +81,19 @@ export const realApiService = {
     /**
      * POST /auth-api/login
      * Login user and get token
-     
+     */
     login: async (email, password) => {
         try {
-            const response = await authApi.post('/login', {
+            const response = await appApi.post('auth/login', {
                 email,
                 password
             });
-            
-            const { token, user } = response.data;
-            
-            // Store token and user in localStorage
-            if (token) {
-                localStorage.setItem('token', token);
-                localStorage.setItem('user', JSON.stringify(user));
-            }
-            
-            return response.data;
+            return;
         } catch (error) {
             handleApiError(error);
         }
     },
-    */
+    /*
     login: async () => {
         return {
             "message": "Login successful",
@@ -115,6 +106,7 @@ export const realApiService = {
             }
         }
     },
+    */
 
     // ==================
     // Products endpoints (public)
@@ -237,7 +229,7 @@ export const realApiService = {
      */
     getSupplyById: async (id) => {
         try {
-            const response = await authApi.get(`/supplies/${id}`);
+            const response = await appApi.get(`/supplies/${id}`);
             return response.data;
         } catch (error) {
             handleApiError(error);
@@ -268,7 +260,7 @@ export const realApiService = {
      */
     updateSupply: async (id, supplyData) => {
         try {
-            const response = await authApi.put(`/supplies/${id}`, {
+            const response = await appApi.put(`/supplies/${id}`, {
                 name: supplyData.name,
                 unit: supplyData.unit,
                 quantity: supplyData.quantity,

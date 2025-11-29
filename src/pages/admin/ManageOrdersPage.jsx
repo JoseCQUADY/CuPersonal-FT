@@ -61,7 +61,6 @@ const ManageOrdersPage = () => {
             setOrders(data.content);
         } catch (err) {
             console.warn("API Get orders failed, using mock data.", err);
-            setOrders(mockSuppliesResponse.content);
         } finally {
             setLoading(false);
         }

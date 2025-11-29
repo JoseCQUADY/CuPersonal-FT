@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
             return null;
         }
     });
-    
+
     const [user, setUser] = useState(() => {
         try {
             const storedUser = localStorage.getItem(USER_KEY);
@@ -35,21 +35,19 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const responseData = await apiService.login(email, password); 
-            const { token, user } = responseData;
+            await apiService.login(email, password);
 
-            setToken(token);
-            setUser(user);
-            localStorage.setItem(TOKEN_KEY, token); 
-            localStorage.setItem(USER_KEY, JSON.stringify(user)); 
+            // Cookie guardada, así que marcamos como logueado
+            setToken("logged-in");   // No es el JWT real, sólo un flag
+            localStorage.setItem(TOKEN_KEY, "logged-in");
 
             return { success: true };
-            
+
         } catch (error) {
             console.error("Login failed:", error);
-            return { 
-                success: false, 
-                error: error.message || "Credenciales incorrectas o error de conexión." 
+            return {
+                success: false,
+                error: error.message || "Credenciales incorrectas o error de conexión."
             };
         }
     };
@@ -60,9 +58,9 @@ export const AuthProvider = ({ children }) => {
             return { success: true, data: response };
         } catch (error) {
             console.error("Registration failed:", error);
-            return { 
-                success: false, 
-                error: error.message || "Error en el registro" 
+            return {
+                success: false,
+                error: error.message || "Error en el registro"
             };
         }
     };
@@ -77,13 +75,13 @@ export const AuthProvider = ({ children }) => {
             console.error('Error removing auth data from localStorage:', error);
         }
     };
-    
+
     const getAuthToken = () => token;
 
-    const value = { 
-        user, 
-        token, 
-        login, 
+    const value = {
+        user,
+        token,
+        login,
         logout,
         register,
         getAuthToken,
